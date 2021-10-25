@@ -1,0 +1,30 @@
+接口自动化
+在运行时出现报错，记得及时更换token
+
+
+---项目代码工程创建---
+config:配置包（存放yaml文件、固定的路径方法）
+data:数据/用例文件夹
+docs:项目相关文档文件夹
+lib:基本代码库包（定义方法，都只传入形参，没有具体数据，一个架子）
+logs:日志文件夹（存放日志文件夹；每天一个文件夹）
+report:报告文件夹（测试报告存放）
+test_case:测试用例代码包（Pytest执行的目录，多个关联）
+tools: 工具类、二次重构
+
+---导出第三方库---
+pip freeze > requirements.txt
+
+---表格用例写入时注意事项---
+
+标准格式 {"code":0,"msg":"请求成功"}
+双引号
+
+---environment.properties---
+report>result>environment.properties
+此文件的作用，在于allure中生成环境信息
+Browser=Firefox2
+Browser.version=773
+stand=songqin_teach4
+Apiur1=127.0.0.1/1ogin5
+python.version=3.6
