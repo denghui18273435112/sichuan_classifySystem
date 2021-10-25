@@ -39,6 +39,7 @@ class all:
     def ParameterlessAdjustment(self,company=None,year=None,member_id=None,Index=None,courseId=None,
                                 module=None,name_id_number=None,GetMemberTriningOffline_id=None,GetTestDetail_id_name=None,companyId=None,GetListOnJobCurrent_name_id=None):
         """所有测试用例集合"""
+        #替换字段
         if "case_train_type" in self.inData["case_id"]\
             or "case_GetSum" in self.inData["case_id"]\
             or "case_GetDate" in self.inData["case_id"]\
@@ -108,16 +109,26 @@ class all:
                  self.data["kw_name"] =GetTestDetail_id_name[0]
             if "case_GetLiziRecord_03"  in  self.inData["case_id"]:
                 self.data["kw_id_number"] =GetTestDetail_id_name[1]
-        if "case_EntryImport_01" in self.inData["case_id"]:
-            file = file_data+os.sep+"四川在职人员导入模板.xlsx"
-            self.request_file = {'file':('培训测评批量查询模板.xlsx',open(file,"rb"),"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")}
         if "case_GetListOnJobCurrentt" in self.inData["case_id"]:
             self.data["company_id"] =company
             self.data["company"].append(company)
 
+        #导入模板操作
+        if "case_EntryImport" in self.inData["case_id"]\
+            or "case_BatchList_01" in self.inData["case_id"]\
+            or "case_DepartureImport_01" in self.inData["case_id"]:
+            if "case_EntryImport_01" in self.inData["case_id"]:
+                file = file_data+os.sep+"四川在职人员导入模板.xlsx"
+            if "case_BatchList_01" in self.inData["case_id"]:
+                file = file_data+os.sep+"入职前诚信级别批量查询模板.xlsx"
+            if "case_DepartureImport_01" in self.inData["case_id"]:
+                file = file_data+os.sep+"四川离职人员导入模板.xlsx"
+            self.request_file = {'file':('模板',open(file,"rb"),"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")}
+
         #接口请求;更新inData的数据;并生成allure报告
         if "case_GetTestDetail_04" in self.inData["case_id"]\
-            or "case_EntryImport" in self.inData["case_id"]:
+            or "case_EntryImport" in self.inData["case_id"]\
+            or "case_BatchList_01" in self.inData["case_id"]:
             body = requests.post(url=self.new_url,headers=self.header,data=self.data,files=self.request_file)
         else:
             body = requests.post(url=self.new_url,headers=self.header,json=self.data)

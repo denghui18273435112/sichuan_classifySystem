@@ -40,7 +40,7 @@ def ExcelData(beginColumn=None,file_name="四川分类系统用例.xls"):
 
 
 if __name__ == "__main__":
-    print(ExcelData("case_GetCurrentCourse")[0])
+    print(ExcelData("case_UpdateAll_01")[0])
 
 
 
