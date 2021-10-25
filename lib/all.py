@@ -123,12 +123,13 @@ class all:
                 file = file_data+os.sep+"入职前诚信级别批量查询模板.xlsx"
             if "case_DepartureImport_01" in self.inData["case_id"]:
                 file = file_data+os.sep+"四川离职人员导入模板.xlsx"
-            self.request_file = {'file':('模板',open(file,"rb"),"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")}
+            self.request_file = {'file':('入职前诚信级别批量查询模板.xlsx',open(file,"rb"),"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")}
 
         #接口请求;更新inData的数据;并生成allure报告
         if "case_GetTestDetail_04" in self.inData["case_id"]\
             or "case_EntryImport" in self.inData["case_id"]\
-            or "case_BatchList_01" in self.inData["case_id"]:
+            or "case_BatchList_01" in self.inData["case_id"]\
+            or "case_DepartureImport_01" in self.inData["case_id"]:
             body = requests.post(url=self.new_url,headers=self.header,data=self.data,files=self.request_file)
         else:
             body = requests.post(url=self.new_url,headers=self.header,json=self.data)
