@@ -109,7 +109,8 @@ class all:
                  self.data["kw_name"] =GetTestDetail_id_name[0]
             if "case_GetLiziRecord_03"  in  self.inData["case_id"]:
                 self.data["kw_id_number"] =GetTestDetail_id_name[1]
-        if "case_GetListOnJobCurrentt" in self.inData["case_id"]:
+        if "case_GetListOnJobCurrentt" in self.inData["case_id"]\
+                or "case_GetListEntry_" in self.inData["case_id"]:
             self.data["company_id"] =company
             self.data["company"].append(company)
 
