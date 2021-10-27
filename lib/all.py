@@ -110,9 +110,17 @@ class all:
             if "case_GetLiziRecord_03"  in  self.inData["case_id"]:
                 self.data["kw_id_number"] =GetTestDetail_id_name[1]
         if "case_GetListOnJobCurrentt" in self.inData["case_id"]\
-                or "case_GetListEntry_" in self.inData["case_id"]:
+            or "case_GetListEntry_" in self.inData["case_id"]\
+            or "case_GetListOnJobNotCurrent_" in self.inData["case_id"]\
+            or "case_GetListDepartureNotCurrent_" in self.inData["case_id"]   :
             self.data["company_id"] =company
             self.data["company"].append(company)
+        if "case_memberpracticefiling_list_" in self.inData["case_id"]\
+                or "case_statistics_" in self.inData["case_id"]\
+                or "case_adminuserList_" in self.inData["case_id"]:
+             self.data["companyId"] =company
+        if "case_companyimportauditGetList_"  in  self.inData["case_id"]:
+            self.data["year"] = year
 
         #导入模板操作
         if "case_EntryImport" in self.inData["case_id"]\
