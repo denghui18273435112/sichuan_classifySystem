@@ -16,7 +16,6 @@ from tools.md5Uitl import get_md5
 from configs.path import *
 import time
 import win32gui
-
 import allure
 import win32con
 from selenium.webdriver.common.keys import Keys
@@ -36,8 +35,9 @@ class all:
         self.data = json.loads(inData["params"])
         self.conftest=conftest
 
-    def ParameterlessAdjustment(self,company=None,year=None,member_id=None,Index=None,courseId=None,
-                                module=None,name_id_number=None,GetMemberTriningOffline_id=None,GetTestDetail_id_name=None,companyId=None,GetListOnJobCurrent_name_id=None):
+    def ParameterlessAdjustment(self,company=None,year=None,member_id=None,Index=None,courseId=None,module=None,name_id_number=None,
+                                GetMemberTriningOffline_id=None,GetTestDetail_id_name=None,companyId=None,
+                                GetListOnJobCurrent_name_id=None,account_nameOrNickName=None,delete_id=None):
         """所有测试用例集合"""
         #替换字段
         if "case_train_type" in self.inData["case_id"]\
@@ -121,6 +121,14 @@ class all:
              self.data["companyId"] =company
         if "case_companyimportauditGetList_"  in  self.inData["case_id"]:
             self.data["year"] = year
+        if "case_adminuserAdd_" in self.inData["case_id"]:
+            self.data["companyId"] =company
+            if "case_adminuserAdd_02" in self.inData["case_id"]:
+                self.data["name"] = account_nameOrNickName[0]
+                self.data["nickName"] = account_nameOrNickName[1]
+        if "case_adminuserDelete_01" in self.inData["case_id"]:
+            print(delete_id)
+            self.data["ids"] = delete_id
 
         #导入模板操作
         if "case_EntryImport" in self.inData["case_id"]\

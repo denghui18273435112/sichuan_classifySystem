@@ -115,3 +115,23 @@ def GetListOnJobCurrent_name_id(token,company):
     """在职人员管理；第一行的姓名 身份证"""
     data =  all(token=token,inData=ExcelData("case_GetListOnJobCurrentt_01")[0],conftest=False).ParameterlessAdjustment(company=company)[1].json()["data"]["list"][0]
     return data["memberName"],data["idNumber"]
+
+@pytest.fixture(scope="session")
+def account_nameOrNickName(token,company):
+    """账号管理-列表数据-获取一条数据；姓名、昵称"""
+    data =  all(token=token,inData=ExcelData("case_adminuserList_01")[0],conftest=False).ParameterlessAdjustment(company=company)[1].json()["data"]["list"][1]
+    return data["name"],data["nickName"]
+
+@pytest.fixture(scope="session")
+def delete_id(token,company):
+    """账号管理-列表数据-获取一条数据；姓名、昵称"""
+    res =  all(token=token,inData=ExcelData("case_adminuserList_01")[0],conftest=False).ParameterlessAdjustment(company=company)[1].json()
+    del_list = []
+    for x in range(int(len(res["data"]["list"]))):
+        name = res["data"]["list"][x]["name"]
+        nickName = res["data"]["list"][x]["nickName"]
+        if  name!=None  or nickName!=None:
+            if "denghuidenghui" in name and  "denghuidenghui" in nickName:
+                del_list.append(res["data"]["list"][x]["id"])
+    return  del_list
+
