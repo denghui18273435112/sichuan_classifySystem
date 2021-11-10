@@ -127,8 +127,7 @@ class all:
                 self.data["name"] = account_nameOrNickName[0]
                 self.data["nickName"] = account_nameOrNickName[1]
         if "case_adminuserDelete_01" in self.inData["case_id"]:
-            print(delete_id)
-            self.data["ids"] = delete_id
+            self.data["ids"].append(delete_id)
 
         #导入模板操作
         if "case_EntryImport" in self.inData["case_id"]\
