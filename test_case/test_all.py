@@ -4,7 +4,7 @@ import allure
 from tools.caseCheck import caseCheck
 from lib.all import all
 
-@allure.epic("山东分类系统")
+@allure.epic("四川分类系统")
 class Test_all(object):
 
     @pytest.mark.parametrize("Data",ExcelData("case"))
