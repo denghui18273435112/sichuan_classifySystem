@@ -149,6 +149,8 @@ class all:
             body = requests.post(url=self.new_url,headers=self.header,data=self.data,files=self.request_file)
         else:
             body = requests.post(url=self.new_url,headers=self.header,json=self.data)
+        print("初始化参数；company={0}；year={1}；member_id={2}；Index={3}；courseId={4}；module={5},name_id_number={6},GetMemberTriningOffline_id={7},GetTestDetail_id_name={8},companyId={9},GetListOnJobCurrent_name_id={10},account_nameOrNickName={11},delete_id={12}"
+              .format(company,year,member_id,Index,courseId,module,name_id_number,GetMemberTriningOffline_id,GetTestDetail_id_name,companyId,GetListOnJobCurrent_name_id,account_nameOrNickName,delete_id))
         print(self.inData["case_id"]+"-"+self.inData["case_name"])
         print(self.new_url)
         print(self.header)
