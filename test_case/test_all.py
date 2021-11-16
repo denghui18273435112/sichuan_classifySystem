@@ -7,7 +7,7 @@ from lib.all import all
 @allure.epic("四川分类系统")
 class Test_all(object):
 
-    @pytest.mark.parametrize("Data",ExcelData("case"))
+    @pytest.mark.parametrize("Data",ExcelData("case_"))
     def test_ParameterlessAdjustment(self,token,Data,GetYear,company,member_id,Index,courseId,module,name_id_number,GetMemberTriningOffline_id,
                                      GetTestDetail_id_name,companyId,GetListOnJobCurrent_name_id,account_nameOrNickName,delete_id):
         """所有测试用例集合"""

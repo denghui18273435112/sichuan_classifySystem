@@ -20,6 +20,7 @@ import allure
 import win32con
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
+from tools.ExcelData import ExcelData
 
 from tools.Base import *
 class all:
@@ -47,7 +48,7 @@ class all:
             or "case_GetCompanyTypeStatisticsList" in self.inData["case_id"]\
             or "case_GetTypeStatistics" in self.inData["case_id"]\
             or "case_GetPlanList" in self.inData["case_id"]\
-            or "case_GetDetailLis" in self.inData["case_id"]:
+            or "case_GetDetailList" in self.inData["case_id"]:
             self.data["company_id"] = company
             self.data["plan_year"] = year
         if "case_GetRecordForMember" in self.inData["case_id"]:
@@ -127,7 +128,32 @@ class all:
                 self.data["name"] = account_nameOrNickName[0]
                 self.data["nickName"] = account_nameOrNickName[1]
         if "case_adminuserDelete_01" in self.inData["case_id"]:
-            self.data["ids"]=delete_id
+            data=ExcelData("case_adminuserList_01")[0]
+            json_s =json.loads(data["params"])
+            json_s["companyId"] = company
+            res = requests.post(url=url+data["url"],json=json_s,headers=self.header).json()
+            del_list = []
+            for x in range(int(len(res["data"]["list"]))):
+                name = res["data"]["list"][x]["name"]
+                nickName = res["data"]["list"][x]["nickName"]
+                if  name!=None  or nickName!=None:
+                    if "denghuidenghui"==name and  "denghuidenghui"==nickName:
+                        del_list.append(res["data"]["list"][x]["id"])
+            self.data["ids"]=del_list
+        if "case_adminuserUpdate_01" in self.inData["case_id"]:
+            data=ExcelData("case_adminuserList_01")[0]
+            json_s =json.loads(data["params"])
+            json_s["companyId"] = company
+            res = requests.post(url=url+data["url"],json=json_s,headers=self.header).json()
+            print(res)
+            del_list = ""
+            for x in range(int(len(res["data"]["list"]))):
+                name = res["data"]["list"][x]["name"]
+                nickName = res["data"]["list"][x]["nickName"]
+                if  name!=None  or nickName!=None:
+                    if "denghuidenghui"==name and  "denghuidenghui"==nickName:
+                        del_list=res["data"]["list"][x]["id"]
+            self.data["id"]=del_list
 
         #导入模板操作
         if "case_EntryImport" in self.inData["case_id"]\
@@ -149,8 +175,6 @@ class all:
             body = requests.post(url=self.new_url,headers=self.header,data=self.data,files=self.request_file)
         else:
             body = requests.post(url=self.new_url,headers=self.header,json=self.data)
-        print("初始化参数；company={0}；year={1}；member_id={2}；Index={3}；courseId={4}；module={5},name_id_number={6},GetMemberTriningOffline_id={7},GetTestDetail_id_name={8},companyId={9},GetListOnJobCurrent_name_id={10},account_nameOrNickName={11},delete_id={12}"
-              .format(company,year,member_id,Index,courseId,module,name_id_number,GetMemberTriningOffline_id,GetTestDetail_id_name,companyId,GetListOnJobCurrent_name_id,account_nameOrNickName,delete_id))
         print(self.inData["case_id"]+"-"+self.inData["case_name"])
         print(self.new_url)
         print(self.header)

@@ -64,7 +64,7 @@ def role(token):
 @pytest.fixture(scope="session")
 def company(token):
     """获取当前账号登录的所属公司id"""
-    return all(token=token,inData=ExcelData("case_GetCurrentCompany")[0],conftest=False).ParameterlessAdjustment()[1].json()["data"]["id"]
+    return all(token=token,inData=ExcelData("case_GetCurrentAllCompany")[0],conftest=False).ParameterlessAdjustment()[1].json()["data"][0]["id"]
 
 @pytest.fixture(scope="session")
 def member_id(token,company,GetYear):
@@ -131,7 +131,7 @@ def delete_id(token,company):
         name = res["data"]["list"][x]["name"]
         nickName = res["data"]["list"][x]["nickName"]
         if  name!=None  or nickName!=None:
-            if "denghuidenghui" in name and  "denghuidenghui" in nickName:
+            if "denghuidenghui"==name and  "denghuidenghui"==nickName:
                 del_list.append(res["data"]["list"][x]["id"])
     return  del_list
 
