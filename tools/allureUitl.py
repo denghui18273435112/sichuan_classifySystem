@@ -5,10 +5,7 @@ import allure
 from configs.conf import *
 
 def alluer_new(inData):
-        """
-        :param inData
-        :return:size='7'
-        """
+        """allure报告自定义拼接"""
         allure.dynamic.feature(inData["case_model"])
         allure.dynamic.story(inData["case_name"]+"-\n-"+inData["title"])
         desc = "<font color='red'>当前执行时间: </font> {}<Br/>" \

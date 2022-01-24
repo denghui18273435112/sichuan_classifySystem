@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/sichuan_classifySystem.iml" filepath="$PROJECT_DIR$/.idea/sichuan_classifySystem.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../sichuan_classifySystem_api/.idea/sichuan_classifySystem.iml" filepath="$PROJECT_DIR$/../sichuan_classifySystem_api/.idea/sichuan_classifySystem.iml" />
     </modules>
   </component>
 </project>
