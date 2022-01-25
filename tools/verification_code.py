@@ -128,6 +128,6 @@ def base64_api(uname, pwd, img, typeid):
 def verification_code(name):
     #return base64_api(uname='denghui', pwd='dengHUI12', img=_file_path+os.sep+"code.png", typeid=3)
     return base64_api(uname='denghui', pwd='dengHUI12',
-                      img=file_data+os.sep+name, typeid=3)
+                      img=data_path+os.sep+name, typeid=3)
 if __name__ == "__main__":
     print(verification_code())

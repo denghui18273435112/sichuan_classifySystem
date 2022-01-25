@@ -21,20 +21,39 @@ import win32con
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 from tools.ExcelData import ExcelData
+from tools.commonly_method import *
 
 from tools.Base import *
 class all:
-
     """
     所有模块
+    # print(self.inData["case_id"]+"-"+self.inData["case_name"])
+    # print(self.new_url)
+    # print(self.header)
+    # print(self.data)
+    # print(body.json())
+    # print("\n")
     """
-    def __init__(self,token,inData,conftest=True):
-        self.header = {"Cookie":"{0}".format(token)}
+    def __init__(self,token,inData,company,GetYear,conftest=True,province_token=None):
+        if "case_PD_01" in inData["case_id"]:
+            self.header = {"Cookie":"{0}".format(province_token)}
+        else:
+            self.header = {"Cookie":"{0}".format(token)}
         self.proxies = {"https":"http://127.0.0.1:8888"}
         self.inData = inData
         self.new_url= url+inData["url"]
         self.data = json.loads(inData["params"])
         self.conftest=conftest
+        self.token = token
+        self.company=company
+        self.GetYear = GetYear
+        self.province_token = province_token
+        if "case" in self.inData["case_id"]:
+            for key  in self.data:
+                if key == "company_id":
+                    self.data["company_id"] = company
+                elif key == "plan_year":
+                    self.data["plan_year"] = GetYear
 
     def ParameterlessAdjustment(self,company=None,year=None,member_id=None,Index=None,courseId=None,module=None,name_id_number=None,
                                 GetMemberTriningOffline_id=None,GetTestDetail_id_name=None,companyId=None,
@@ -93,8 +112,8 @@ class all:
             if "case_GetTestDetail_03" in self.inData["case_id"]:
                 self.data["id_number"] = GetTestDetail_id_name[1]
             if "case_GetTestDetail_04" in self.inData["case_id"]:
-                file = file_data+os.sep+"培训测评批量查询模板.xlsx"
-                self.request_file = {'file':('培训测评批量查询模板.xlsx',open(file,"rb"),"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")}
+                file = file_data+os.sep+"04培训测评批量查询模板.xlsx"
+                self.request_file = {'file':('04培训测评批量查询模板.xlsx',open(file,"rb"),"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")}
         if "case_GetCompanyTestSum"  in  self.inData["case_id"]:
             self.data["companyId"] = company
             self.data["year"] = year
@@ -160,12 +179,12 @@ class all:
             or "case_BatchList_01" in self.inData["case_id"]\
             or "case_DepartureImport_01" in self.inData["case_id"]:
             if "case_EntryImport_01" in self.inData["case_id"]:
-                file = file_data+os.sep+"四川在职人员导入模板.xlsx"
+                file = file_data+os.sep+"02四川在职人员导入模板.xlsx"
             if "case_BatchList_01" in self.inData["case_id"]:
-                file = file_data+os.sep+"入职前诚信级别批量查询模板.xlsx"
+                file = file_data+os.sep+"01入职前诚信级别批量查询模板.xlsx"
             if "case_DepartureImport_01" in self.inData["case_id"]:
-                file = file_data+os.sep+"四川离职人员导入模板.xlsx"
-            self.request_file = {'file':('入职前诚信级别批量查询模板.xlsx',open(file,"rb"),"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")}
+                file = file_data+os.sep+"03四川离职人员导入模板.xlsx"
+            self.request_file = {'file':('01入职前诚信级别批量查询模板.xlsx',open(file,"rb"),"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")}
 
         #接口请求;更新inData的数据;并生成allure报告
         if "case_GetTestDetail_04" in self.inData["case_id"]\
@@ -183,3 +202,53 @@ class all:
         print("\n")
         inData = update_data(self.inData,self.data,self.new_url,self.header,body.json(),json.loads(self.inData["response_expect_result"]),self.conftest)
         return inData,body
+
+
+    def case_ED(self):
+        """essential data（基础数据）"""
+        try:
+            body = requests.post(url=self.new_url,headers=self.header,json=self.data)
+        except BaseException:
+            traceback.print_exc()
+            self.data["actual_result"] = traceback.format_exc()
+        finally:
+            inData = update_data(self.inData,self.data,self.new_url,self.header,body.json(),json.loads(self.inData["response_expect_result"]),self.conftest)
+            return inData,body
+
+    def case_HP(self):
+        """home page(首页)"""
+        try:
+            body = requests.post(url=self.new_url,headers=self.header,json=self.data)
+        except BaseException:
+            traceback.print_exc()
+            self.data["actual_result"] = traceback.format_exc()
+        finally:
+            inData = update_data(self.inData,self.data,self.new_url,self.header,body.json(),json.loads(self.inData["response_expect_result"]),self.conftest)
+            return inData,body
+
+    def case_PD(self):
+        """preposition data（前置数据）"""
+        try:
+            #参数调整
+            if "case_PD_01" in self.inData["case_id"]:
+                self.request_file = {'file':('05四川培训记录汇总表导入模板(寿险).xlsx',open(file_path_06,"rb"),"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")}
+            if "case_PD_03" in self.inData["case_id"]:
+                data = requests_zzl("PD_02",self.token,self.company,self.GetYear)
+                print(data)
+                new_list=[]
+                for key in range(int(len(data["data"]["list"]))):
+                    print(data["data"]["list"][key]["class_name"])
+                    if data["data"]["list"][key]["class_name"] == "审核数据20138":
+                        new_list.append(data["data"]["list"][key]["id"])
+                self.data["ids"] = new_list
+            #是否上传文件
+            if "case_PD_01" in self.inData["case_id"]:
+                body = requests.post(url=self.new_url,headers=self.header,data=self.data,files=self.request_file)
+            else:
+                body = requests.post(url=self.new_url,headers=self.header,json=self.data)
+        except BaseException:
+            traceback.print_exc()
+            self.data["actual_result"] = traceback.format_exc()
+        finally:
+            inData = update_data(self.inData,self.data,self.new_url,self.header,body.json(),json.loads(self.inData["response_expect_result"]),self.conftest)
+            return inData,body

@@ -23,9 +23,9 @@ def ExcelData(beginColumn=None,file_name="四川分类系统用例.xls"):
     response_expect_result = "响应预期结果"
     actual_result = "实际结果"
     """
-    excel_file=data_path+os.sep+file_name
+    # excel_file=data_path+os.sep+file_name
     _data=[]
-    workbook = xlrd.open_workbook(excel_file,formatting_info=True)
+    workbook = xlrd.open_workbook(file_path_01,formatting_info=True)
     sheets = workbook.sheet_names()
     for i in range(workbook.nsheets):
         sheet = workbook.sheet_by_name(sheets[i])
@@ -41,7 +41,7 @@ def ExcelData(beginColumn=None,file_name="四川分类系统用例.xls"):
 
 
 if __name__ == "__main__":
-    print(ExcelData("case_adminuserList_01")[0])
+    print(ExcelData("case_PD_01"))
 
 
 

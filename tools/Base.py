@@ -31,7 +31,23 @@ def time_YmdHMS(YmdHMS=True):
         current_time = now_time.strftime("%Y%m%d")
     return   current_time
 
-
+def date_YmdHMS(type=1):
+    """
+    多格式时间
+    :return:current_time
+    """
+    now_time = datetime.datetime.now()
+    if type == 1:
+        current_time = now_time.strftime("%Y%m%d%H%M%S")
+    if type == 2:
+        current_time = now_time.strftime("%Y-%m-%d- %H:%M:%S")
+    if type == 3:
+        current_time = now_time.strftime("%Y%m%d")
+    if type == 4:
+        current_time = now_time.strftime("%Y-%m-%d")
+    if type == 5:
+        current_time = now_time.strftime("%Y")
+    return current_time
 
 
 p_data = '\\${(.*)}\\$'
