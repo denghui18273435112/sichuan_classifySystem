@@ -38,13 +38,6 @@ class all:
                         province_token,province_company_id,     #省公司token、公司id
                         inData,GetYear,                         #表格数据、当前年份
                         conftest=True):
-        #根据接口不同选择不同的token  省协会 省公司
-        if "case_PD_01" in inData["case_id"]\
-                or "case_PS_02"in inData["case_id"]:
-            self.header = {"Cookie":"{0}".format(province_token)}
-        else:
-            self.header = {"Cookie":"{0}".format(association_token)}
-        #####################
         self.proxies = {"https":"http://127.0.0.1:8888"}
         self.inData = inData
         self.new_url= url+inData["url"]
@@ -54,7 +47,13 @@ class all:
         self.company=association_company_id
         self.GetYear = GetYear
         self.province_token = province_token
-        #字段替换;公司id不一样
+        #根据接口不同选择不同的token  省协会 省公司
+        if "case_PD_01" in inData["case_id"]\
+                or "case_PS_02"in inData["case_id"]:
+            self.header = {"Cookie":"{0}".format(province_token)}
+        else:
+            self.header = {"Cookie":"{0}".format(association_token)}
+        #替换字段
         if "case" in self.inData["case_id"]:
             for key  in self.data:
                 if key == "company_id":
@@ -76,6 +75,34 @@ class all:
                     else:
                         self.data["date"][0] = "{}-01-01".format(GetYear)
                         self.data["date"][1] = "{}".format(date_YmdHMS(4))
+
+    def case_ALL(self):
+        """处理文件上传；依赖接口"""
+        try:
+            #上传文件参数;接口依赖
+            if "case_PD_01" in self.inData["case_id"]:
+                self.request_file = {'file':('05四川培训记录汇总表导入模板(寿险).xlsx',open(file_path_06,"rb"),"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")}
+            if "case_PD_03" in self.inData["case_id"]:
+                data = requests_zzl("PD_02",self.token,self.company,self.GetYear)
+                print(data)
+                new_list=[]
+                for key in range(int(len(data["data"]["list"]))):
+                    print(data["data"]["list"][key]["class_name"])
+                    if data["data"]["list"][key]["class_name"] == "审核数据20138":
+                        new_list.append(data["data"]["list"][key]["id"])
+                self.data["ids"] = new_list
+            #请求参数是否上传文件
+            if "case_PD_01" in self.inData["case_id"]:
+                body = requests.post(url=self.new_url,headers=self.header,data=self.data,files=self.request_file)
+            else:
+                body = requests.post(url=self.new_url,headers=self.header,json=self.data)
+        except BaseException:
+            traceback.print_exc()
+            self.data["actual_result"] = traceback.format_exc()
+        finally:
+            inData = update_data(self.inData,self.data,self.new_url,self.header,body.json(),json.loads(self.inData["response_expect_result"]),self.conftest)
+            return inData,body
+
 
 
     def ParameterlessAdjustment(self,company=None,year=None,member_id=None,Index=None,courseId=None,module=None,name_id_number=None,
@@ -226,84 +253,7 @@ class all:
         inData = update_data(self.inData,self.data,self.new_url,self.header,body.json(),json.loads(self.inData["response_expect_result"]),self.conftest)
         return inData,body
 
-    def case_ED(self):
-        """essential data（基础数据）"""
-        try:
-            body = requests.post(url=self.new_url,headers=self.header,json=self.data)
-        except BaseException:
-            traceback.print_exc()
-            self.data["actual_result"] = traceback.format_exc()
-        finally:
-            inData = update_data(self.inData,self.data,self.new_url,self.header,body.json(),json.loads(self.inData["response_expect_result"]),self.conftest)
-            return inData,body
 
-    def case_HP(self):
-        """home page(首页)"""
-        try:
-            body = requests.post(url=self.new_url,headers=self.header,json=self.data)
-        except BaseException:
-            traceback.print_exc()
-            self.data["actual_result"] = traceback.format_exc()
-        finally:
-            inData = update_data(self.inData,self.data,self.new_url,self.header,body.json(),json.loads(self.inData["response_expect_result"]),self.conftest)
-            return inData,body
 
-    def case_PD(self):
-        """preposition data（前置数据）"""
-        try:
-            #参数调整
-            if "case_PD_01" in self.inData["case_id"]:
-                self.request_file = {'file':('05四川培训记录汇总表导入模板(寿险).xlsx',open(file_path_06,"rb"),"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")}
-            if "case_PD_03" in self.inData["case_id"]:
-                data = requests_zzl("PD_02",self.token,self.company,self.GetYear)
-                print(data)
-                new_list=[]
-                for key in range(int(len(data["data"]["list"]))):
-                    print(data["data"]["list"][key]["class_name"])
-                    if data["data"]["list"][key]["class_name"] == "审核数据20138":
-                        new_list.append(data["data"]["list"][key]["id"])
-                self.data["ids"] = new_list
-            #是否上传文件
-            if "case_PD_01" in self.inData["case_id"]:
-                body = requests.post(url=self.new_url,headers=self.header,data=self.data,files=self.request_file)
-            else:
-                body = requests.post(url=self.new_url,headers=self.header,json=self.data)
-        except BaseException:
-            traceback.print_exc()
-            self.data["actual_result"] = traceback.format_exc()
-        finally:
-            inData = update_data(self.inData,self.data,self.new_url,self.header,body.json(),json.loads(self.inData["response_expect_result"]),self.conftest)
-            return inData,body
 
-    def case_PS(self):
-        """Plan  submit(培训计划报送)"""
-        try:
-            body = requests.post(url=self.new_url,headers=self.header,json=self.data)
-        except BaseException:
-            traceback.print_exc()
-            self.data["actual_result"] = traceback.format_exc()
-        finally:
-            inData = update_data(self.inData,self.data,self.new_url,self.header,body.json(),json.loads(self.inData["response_expect_result"]),self.conftest)
-            return inData,body
 
-    def case_TRI(self):
-        """Training record import(培训记录导入)"""
-        try:
-            body = requests.post(url=self.new_url,headers=self.header,json=self.data)
-        except BaseException:
-            traceback.print_exc()
-            self.data["actual_result"] = traceback.format_exc()
-        finally:
-            inData = update_data(self.inData,self.data,self.new_url,self.header,body.json(),json.loads(self.inData["response_expect_result"]),self.conftest)
-            return inData,body
-
-    def case_TRE(self):
-        """Training Record Enquiry(培训记录导入)"""
-        try:
-            body = requests.post(url=self.new_url,headers=self.header,json=self.data)
-        except BaseException:
-            traceback.print_exc()
-            self.data["actual_result"] = traceback.format_exc()
-        finally:
-            inData = update_data(self.inData,self.data,self.new_url,self.header,body.json(),json.loads(self.inData["response_expect_result"]),self.conftest)
-            return inData,body
