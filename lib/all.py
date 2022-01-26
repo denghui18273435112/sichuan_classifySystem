@@ -34,26 +34,49 @@ class all:
     # print(body.json())
     # print("\n")
     """
-    def __init__(self,token,inData,company,GetYear,conftest=True,province_token=None):
-        if "case_PD_01" in inData["case_id"]:
+    def __init__(self,association_token,association_company_id, #协会token、公司id
+                        province_token,province_company_id,     #省公司token、公司id
+                        inData,GetYear,                         #表格数据、当前年份
+                        conftest=True):
+        #根据接口不同选择不同的token  省协会 省公司
+        if "case_PD_01" in inData["case_id"]\
+                or "case_PS_02"in inData["case_id"]:
             self.header = {"Cookie":"{0}".format(province_token)}
         else:
-            self.header = {"Cookie":"{0}".format(token)}
+            self.header = {"Cookie":"{0}".format(association_token)}
+        #####################
         self.proxies = {"https":"http://127.0.0.1:8888"}
         self.inData = inData
         self.new_url= url+inData["url"]
         self.data = json.loads(inData["params"])
         self.conftest=conftest
-        self.token = token
-        self.company=company
+        self.token = association_token
+        self.company=association_company_id
         self.GetYear = GetYear
         self.province_token = province_token
+        #字段替换;公司id不一样
         if "case" in self.inData["case_id"]:
             for key  in self.data:
                 if key == "company_id":
-                    self.data["company_id"] = company
+                    if "case_PS_02" in  self.inData["case_id"]:
+                        self.data["company_id"] = province_company_id
+                    else:
+                        self.data["company_id"] = association_company_id
                 elif key == "plan_year":
                     self.data["plan_year"] = GetYear
+                elif key == "training_year":
+                    self.data["training_year"] = GetYear
+                elif key == "start_date":
+                    self.data["start_date"] = "{}-01-01".format(GetYear)
+                elif key == "end_date":
+                    self.data["end_date"] = "{}".format(date_YmdHMS(4))
+                elif key == "date":
+                    if "case_HP_04" in self.inData["case_id"] or "case_HP_05" in self.inData["case_id"]:
+                        print("请求参数 date不替换")
+                    else:
+                        self.data["date"][0] = "{}-01-01".format(GetYear)
+                        self.data["date"][1] = "{}".format(date_YmdHMS(4))
+
 
     def ParameterlessAdjustment(self,company=None,year=None,member_id=None,Index=None,courseId=None,module=None,name_id_number=None,
                                 GetMemberTriningOffline_id=None,GetTestDetail_id_name=None,companyId=None,
@@ -203,7 +226,6 @@ class all:
         inData = update_data(self.inData,self.data,self.new_url,self.header,body.json(),json.loads(self.inData["response_expect_result"]),self.conftest)
         return inData,body
 
-
     def case_ED(self):
         """essential data（基础数据）"""
         try:
@@ -246,6 +268,39 @@ class all:
                 body = requests.post(url=self.new_url,headers=self.header,data=self.data,files=self.request_file)
             else:
                 body = requests.post(url=self.new_url,headers=self.header,json=self.data)
+        except BaseException:
+            traceback.print_exc()
+            self.data["actual_result"] = traceback.format_exc()
+        finally:
+            inData = update_data(self.inData,self.data,self.new_url,self.header,body.json(),json.loads(self.inData["response_expect_result"]),self.conftest)
+            return inData,body
+
+    def case_PS(self):
+        """Plan  submit(培训计划报送)"""
+        try:
+            body = requests.post(url=self.new_url,headers=self.header,json=self.data)
+        except BaseException:
+            traceback.print_exc()
+            self.data["actual_result"] = traceback.format_exc()
+        finally:
+            inData = update_data(self.inData,self.data,self.new_url,self.header,body.json(),json.loads(self.inData["response_expect_result"]),self.conftest)
+            return inData,body
+
+    def case_TRI(self):
+        """Training record import(培训记录导入)"""
+        try:
+            body = requests.post(url=self.new_url,headers=self.header,json=self.data)
+        except BaseException:
+            traceback.print_exc()
+            self.data["actual_result"] = traceback.format_exc()
+        finally:
+            inData = update_data(self.inData,self.data,self.new_url,self.header,body.json(),json.loads(self.inData["response_expect_result"]),self.conftest)
+            return inData,body
+
+    def case_TRE(self):
+        """Training Record Enquiry(培训记录导入)"""
+        try:
+            body = requests.post(url=self.new_url,headers=self.header,json=self.data)
         except BaseException:
             traceback.print_exc()
             self.data["actual_result"] = traceback.format_exc()

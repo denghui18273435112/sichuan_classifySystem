@@ -64,24 +64,45 @@ class Test_all(object):
 
 
     @pytest.mark.run(order=1001)
-    @pytest.mark.parametrize("Data",ExcelData("case_ED"))
-    def test_ED(self,association_token,Data,GetYear,company):
+    @pytest.mark.parametrize("inData",ExcelData("case_ED"))
+    def test_ED(self,association_token,association_company_id,province_token,province_company_id,inData,GetYear):
         """essential data（基础数据）"""
-        res =all(association_token,Data,company,GetYear).case_ED()
+        res =all(association_token,association_company_id,province_token,province_company_id,inData,GetYear).case_ED()
         caseCheck().case_Check(res[0])
 
     @pytest.mark.run(order=1002)
-    @pytest.mark.parametrize("Data",ExcelData("case_PD_"))
-    def test_PD(self,association_token,Data,GetYear,company,province_token):
+    @pytest.mark.parametrize("inData",ExcelData("case_PD_"))
+    def test_PD(self,association_token,association_company_id,province_token,province_company_id,inData,GetYear):
         """preposition data（前置数据）"""
-        res =all(association_token,Data,company,GetYear,province_token=province_token).case_PD()
+        res =all(association_token,association_company_id,province_token,province_company_id,inData,GetYear).case_PD()
         caseCheck().case_Check(res[0])
 
     @pytest.mark.run(order=1003)
-    @pytest.mark.parametrize("Data",ExcelData("case_HP"))
-    def test_HP(self,association_token,Data,GetYear,company):
+    @pytest.mark.parametrize("inData",ExcelData("case_HP"))
+    def test_HP(self,association_token,association_company_id,province_token,province_company_id,inData,GetYear):
         """home page(首页)"""
-        res =all(association_token,Data,company,GetYear).case_HP()
+        res =all(association_token,association_company_id,province_token,province_company_id,inData,GetYear).case_HP()
+        caseCheck().case_Check(res[0])
+
+    @pytest.mark.run(order=1004)
+    @pytest.mark.parametrize("inData",ExcelData("case_PS"))
+    def test_PS(self,association_token,association_company_id,province_token,province_company_id,inData,GetYear):
+        """Plan  submit(培训计划报送)"""
+        res =all(association_token,association_company_id,province_token,province_company_id,inData,GetYear).case_PS()
+        caseCheck().case_Check(res[0])
+
+    @pytest.mark.run(order=1005)
+    @pytest.mark.parametrize("inData",ExcelData("case_TRI"))
+    def test_TRI(self,association_token,association_company_id,province_token,province_company_id,inData,GetYear):
+        """Training record import(培训记录导入)"""
+        res =all(association_token,association_company_id,province_token,province_company_id,inData,GetYear).case_TRI()
+        caseCheck().case_Check(res[0])
+
+    @pytest.mark.run(order=1006)
+    @pytest.mark.parametrize("inData",ExcelData("case_TRE"))
+    def test_TRE(self,association_token,association_company_id,province_token,province_company_id,inData,GetYear):
+        """Training Record Enquiry(培训记录查询)"""
+        res =all(association_token,association_company_id,province_token,province_company_id,inData,GetYear).case_TRE()
         caseCheck().case_Check(res[0])
 
 

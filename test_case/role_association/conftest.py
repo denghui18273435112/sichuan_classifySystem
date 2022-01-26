@@ -14,6 +14,7 @@ def empty_report_file():
     except:
         pass
 
+#############################默认传入的5个参数###########################################################################
 @pytest.fixture(scope="session")
 def association_token():
     """省协会token"""
@@ -25,20 +26,26 @@ def province_token():
     return login("login-002")
 
 @pytest.fixture(scope="session")
-def Index(association_token):
-    """最核心的接口"""
-    return requests_zzl("case_ED_01",association_token)
+def association_company_id(association_token):
+    """省协会登录账号公司id"""
+    return  requests_zzl("case_ED_03",association_token)["data"][0]["id"]
+
+@pytest.fixture(scope="session")
+def province_company_id(province_token):
+    """省公司登录账号公司id"""
+    return  requests_zzl("case_ED_03",province_token)["data"][0]["id"]
 
 @pytest.fixture(scope="session")
 def GetYear(association_token):
     """获取最新年份"""
     year = requests_zzl("case_ED_02",association_token)["data"]
     return  year[len(year)-1]
+########################################################################################################
 
 @pytest.fixture(scope="session")
-def company(association_token):
-    """登录账号公司id"""
-    return  requests_zzl("case_ED_03",association_token)["data"][0]["id"]
+def Index(association_token):
+    """最核心的接口"""
+    return requests_zzl("case_ED_01",association_token)
 
 @pytest.fixture(scope="session")
 def company(association_token):
