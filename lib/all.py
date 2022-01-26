@@ -66,20 +66,26 @@ class all:
                 elif key == "training_year":
                     self.data["training_year"] = GetYear
                 elif key == "start_date":
-                    self.data["start_date"] = "{}-01-01".format(GetYear)
+                    if "case_TRS_01" in self.inData["case_id"]:
+                        print("不替换参数")
+                    else:
+                        self.data["start_date"] = "{}-01-01".format(GetYear)
                 elif key == "end_date":
-                    self.data["end_date"] = "{}".format(date_YmdHMS(4))
+                    if "case_TRS_01" in self.inData["case_id"]:
+                        print("不替换参数")
+                    else:
+                        self.data["end_date"] = "{}".format(date_YmdHMS(4))
                 elif key == "date":
-                    if "case_HP_04" in self.inData["case_id"] or "case_HP_05" in self.inData["case_id"]:
-                        print("请求参数 date不替换")
+                    if "case_HP_04" in self.inData["case_id"] or "case_HP_05" in self.inData["case_id"] or "case_TRS_01" in self.inData["case_id"]:
+                        print("不替换参数")
                     else:
                         self.data["date"][0] = "{}-01-01".format(GetYear)
                         self.data["date"][1] = "{}".format(date_YmdHMS(4))
 
     def case_ALL(self):
-        """处理文件上传；依赖接口"""
+        """所有"""
         try:
-            #上传文件参数;接口依赖
+            #文件参数;接口依赖
             if "case_PD_01" in self.inData["case_id"]:
                 self.request_file = {'file':('05四川培训记录汇总表导入模板(寿险).xlsx',open(file_path_06,"rb"),"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")}
             if "case_PD_03" in self.inData["case_id"]:
