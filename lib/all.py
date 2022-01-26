@@ -65,6 +65,8 @@ class all:
                     self.data["plan_year"] = GetYear
                 elif key == "training_year":
                     self.data["training_year"] = GetYear
+                elif key == "year":
+                    self.data["year"] = GetYear
                 elif key == "start_date":
                     if "case_TRS_01" in self.inData["case_id"]:
                         print("不替换参数")

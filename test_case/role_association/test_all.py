@@ -126,4 +126,19 @@ class Test_all(object):
         res =all(association_token,association_company_id,province_token,province_company_id,inData,GetYear).case_ALL()
         caseCheck().case_Check(res[0])
 
+     #@pytest.mark.skip
+    @pytest.mark.run(order=1009)
+    @pytest.mark.parametrize("inData",ExcelData("case_Trecords"))
+    def test_case_case_Trecords(self,association_token,association_company_id,province_token,province_company_id,inData,GetYear):
+        """Training records(培训档案管理)"""
+        res =all(association_token,association_company_id,province_token,province_company_id,inData,GetYear).case_ALL()
+        caseCheck().case_Check(res[0])
+
+     #@pytest.mark.skip
+    @pytest.mark.run(order=1010)
+    @pytest.mark.parametrize("inData",ExcelData("case_TE"))
+    def test_case_case_Trecords(self,association_token,association_company_id,province_token,province_company_id,inData,GetYear):
+        """Training evaluation(培训测评)"""
+        res =all(association_token,association_company_id,province_token,province_company_id,inData,GetYear).case_ALL()
+        caseCheck().case_Check(res[0])
 
