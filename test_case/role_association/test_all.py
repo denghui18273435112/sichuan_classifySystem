@@ -20,7 +20,7 @@ def teardown_module():
     allure.attach(body=token, name="登录后拼接的token", attachment_type=allure.attachment_type.TEXT)
 
     #身份证查询个人信息 删除
-    for x in ["431225199212061818","431226199009250134","431226199009250150","431226199009250177","431226199009250193"]:
+    for x in ["431225199212061818","431226199009250134","431226199009250150","431226199009250177","431226199009250193","440101198803123654"]:
         url1 = "http://sc.maintain.giiatop.com/api/member/DeleteMember"
         data1= {"idNumber":"{}".format(x)}
         header1 = {"Cookie":token}
@@ -119,7 +119,7 @@ class Test_all(object):
         res =all(association_token,association_company_id,province_token,province_company_id,inData,GetYear).case_ALL()
         caseCheck().case_Check(res[0])
 
-     #@pytest.mark.skip
+    #@pytest.mark.skip
     @pytest.mark.run(order=1009)
     @pytest.mark.parametrize("inData",ExcelData("case_Trecords"))
     def test_Trecords(self,association_token,association_company_id,province_token,province_company_id,inData,GetYear):
@@ -127,7 +127,7 @@ class Test_all(object):
         res =all(association_token,association_company_id,province_token,province_company_id,inData,GetYear).case_ALL()
         caseCheck().case_Check(res[0])
 
-     #@pytest.mark.skip
+    #@pytest.mark.skip
     @pytest.mark.run(order=1010)
     @pytest.mark.parametrize("inData",ExcelData("case_TE"))
     def test_TE(self,association_token,association_company_id,province_token,province_company_id,inData,GetYear):
@@ -135,10 +135,44 @@ class Test_all(object):
         res =all(association_token,association_company_id,province_token,province_company_id,inData,GetYear).case_ALL()
         caseCheck().case_Check(res[0])
 
-     #@pytest.mark.skip
+    #@pytest.mark.skip
     @pytest.mark.run(order=1011)
     @pytest.mark.parametrize("inData",ExcelData("case_TPC"))
     def test_TPC(self,association_token,association_company_id,province_token,province_company_id,inData,GetYear):
         """Third Party company(第三方公司)"""
         res =all(association_token,association_company_id,province_token,province_company_id,inData,GetYear).case_ALL()
         caseCheck().case_Check(res[0])
+
+    #@pytest.mark.skip
+    @pytest.mark.run(order=1012)
+    @pytest.mark.parametrize("inData",ExcelData("case_PIQ"))
+    def test_PIQ(self,association_token,association_company_id,province_token,province_company_id,inData,GetYear):
+        """Personal Information Query(个人信息查询)"""
+        res =all(association_token,association_company_id,province_token,province_company_id,inData,GetYear).case_ALL()
+        caseCheck().case_Check(res[0])
+
+    #@pytest.mark.skip
+    @pytest.mark.run(order=1013)
+    @pytest.mark.parametrize("inData",ExcelData("case_PIC"))
+    def test_PIC(self,association_token,association_company_id,province_token,province_company_id,inData,GetYear):
+        """Personal information correction(个人信息修正)"""
+        res =all(association_token,association_company_id,province_token,province_company_id,inData,GetYear).case_ALL()
+        caseCheck().case_Check(res[0])
+
+    #@pytest.mark.skip
+    @pytest.mark.run(order=1014)
+    @pytest.mark.parametrize("inData",ExcelData("case_PCIT"))
+    def test_PCIT(self,association_token,association_company_id,province_token,province_company_id,inData,GetYear):
+        """Practice certificate import tracking(执业证导入追踪)"""
+        res =all(association_token,association_company_id,province_token,province_company_id,inData,GetYear).case_ALL()
+        caseCheck().case_Check(res[0])
+
+    #@pytest.mark.skip
+    @pytest.mark.run(order=1015)
+    @pytest.mark.parametrize("inData",ExcelData("case_IPM"))
+    def test_IPM(self,association_token,association_company_id,province_token,province_company_id,inData,GetYear):
+        """In-service personnel management(在职人员管理)"""
+        res =all(association_token,association_company_id,province_token,province_company_id,inData,GetYear).case_ALL()
+        caseCheck().case_Check(res[0])
+
+

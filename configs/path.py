@@ -31,11 +31,13 @@ _db_config_file = config_path +os.sep+"db_conf.yaml"     #定义db_conf.yaml的�
 test_xlsx = data_path+os.sep+"ctest.xlsx"
 
 #文档路径
+file_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 file_path_01= docs_path+os.sep+"四川分类系统用例.xls"
 file_path_02= file_path+os.sep+"01入职前诚信级别批量查询模板.xlsx"
 file_path_03= file_path+os.sep+"02四川在职人员导入模板.xlsx"
 file_path_04= file_path+os.sep+"03四川离职人员导入模板.xlsx"
 file_path_05= file_path+os.sep+"04培训测评批量查询模板.xlsx"
 file_path_06= file_path+os.sep+"05四川培训记录汇总表导入模板(寿险).xlsx"
+
 
 

@@ -40,7 +40,7 @@ def login(case_id="login-001"):
             break
     return token
 
-def  requests_zzl(case_id,token_1=None,company_id_1=None,year=None):
+def  requests_zzl(case_id,token_1=None,company_id_1=None,year=None,file=None):
     """
 接口请求
     :return:
@@ -69,12 +69,18 @@ def  requests_zzl(case_id,token_1=None,company_id_1=None,year=None):
                     data_new[key][1] = "{}".format(date_YmdHMS(4))
     header = {"Cookie":"{0}".format(token_1)}
 
-    return requests.post(url=url_new, headers=header, json=data_new).json()
+    if "case_PIQ_04" in case_id :
+        return requests.post(url=url_new,headers=header,data=data_new,files=file).json()
+    else:
+        return requests.post(url=url_new, headers=header, json=data_new).json()
+
+
+
 
 
 if __name__ == '__main__':
     #print(login("login-001"))
-    data = requests_zzl(case_id="case_ED_01",token_1=login())
+    data = requests_zzl(case_id="case_PIQ_04",token_1=login())
     print(data)
 
 
