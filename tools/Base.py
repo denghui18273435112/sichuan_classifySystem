@@ -40,7 +40,7 @@ def date_YmdHMS(type=1):
     if type == 1:
         current_time = now_time.strftime("%Y%m%d%H%M%S")
     if type == 2:
-        current_time = now_time.strftime("%Y-%m-%d- %H:%M:%S")
+        current_time = now_time.strftime("%Y-%m-%d %H:%M:%S")
     if type == 3:
         current_time = now_time.strftime("%Y%m%d")
     if type == 4:

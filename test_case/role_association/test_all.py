@@ -54,13 +54,6 @@ def teardown_module():
 
 @allure.epic("四川分类系统")
 class Test_all(object):
-    #尚未处理的
-    # @pytest.mark.skip
-    # @pytest.mark.parametrize("Data",ExcelData("case"))
-    # def test_ParameterlessAdjustment(self,association_token,Data,GetYear,company):
-    #     """所有的"""
-    #     res =all(association_token,Data).ParameterlessAdjustment(year=GetYear,company=company)
-    #     caseCheck().case_Check(res[0])
 
     #@pytest.mark.skip
     @pytest.mark.run(order=1001)
@@ -129,7 +122,7 @@ class Test_all(object):
      #@pytest.mark.skip
     @pytest.mark.run(order=1009)
     @pytest.mark.parametrize("inData",ExcelData("case_Trecords"))
-    def test_case_case_Trecords(self,association_token,association_company_id,province_token,province_company_id,inData,GetYear):
+    def test_Trecords(self,association_token,association_company_id,province_token,province_company_id,inData,GetYear):
         """Training records(培训档案管理)"""
         res =all(association_token,association_company_id,province_token,province_company_id,inData,GetYear).case_ALL()
         caseCheck().case_Check(res[0])
@@ -137,8 +130,15 @@ class Test_all(object):
      #@pytest.mark.skip
     @pytest.mark.run(order=1010)
     @pytest.mark.parametrize("inData",ExcelData("case_TE"))
-    def test_case_case_Trecords(self,association_token,association_company_id,province_token,province_company_id,inData,GetYear):
+    def test_TE(self,association_token,association_company_id,province_token,province_company_id,inData,GetYear):
         """Training evaluation(培训测评)"""
         res =all(association_token,association_company_id,province_token,province_company_id,inData,GetYear).case_ALL()
         caseCheck().case_Check(res[0])
 
+     #@pytest.mark.skip
+    @pytest.mark.run(order=1011)
+    @pytest.mark.parametrize("inData",ExcelData("case_TPC"))
+    def test_TPC(self,association_token,association_company_id,province_token,province_company_id,inData,GetYear):
+        """Third Party company(第三方公司)"""
+        res =all(association_token,association_company_id,province_token,province_company_id,inData,GetYear).case_ALL()
+        caseCheck().case_Check(res[0])

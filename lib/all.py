@@ -22,7 +22,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 from tools.ExcelData import ExcelData
 from tools.commonly_method import *
-
+import traceback
 from tools.Base import *
 class all:
     """
@@ -39,50 +39,61 @@ class all:
                         inData,GetYear,                         #表格数据、当前年份
                         conftest=True):
         self.proxies = {"https":"http://127.0.0.1:8888"}
-        self.inData = inData
         self.new_url= url+inData["url"]
         self.data = json.loads(inData["params"])
         self.conftest=conftest
         self.token = association_token
         self.company=association_company_id
-        self.GetYear = GetYear
+
+        self.association_token =association_token
+        self.association_company_id= association_company_id
         self.province_token = province_token
+        self.province_company_id = province_company_id
+        self.inData = inData
+        self.GetYear = GetYear
         #根据接口不同选择不同的token  省协会 省公司
-        if "case_PD_01" in inData["case_id"]\
-                or "case_PS_02"in inData["case_id"]:
+        if "case_PD_01" in inData["case_id"] or "case_PS_02"in inData["case_id"] or "case_TRE_04"in inData["case_id"]:
             self.header = {"Cookie":"{0}".format(province_token)}
         else:
             self.header = {"Cookie":"{0}".format(association_token)}
         #替换字段
         if "case" in self.inData["case_id"]:
             for key  in self.data:
+                #公司id
                 if key == "company_id":
                     if "case_PS_02" in  self.inData["case_id"]:
                         self.data["company_id"] = province_company_id
                     else:
                         self.data["company_id"] = association_company_id
-                elif key == "plan_year":
-                    self.data["plan_year"] = GetYear
-                elif key == "training_year":
-                    self.data["training_year"] = GetYear
-                elif key == "year":
-                    self.data["year"] = GetYear
-                elif key == "start_date":
-                    if "case_TRS_01" in self.inData["case_id"]:
-                        print("不替换参数")
+                #时间、日期
+                elif key == "created_time" or  key == "date"  or key == "updated_time":
+                    if "case_TPC_04" in  self.inData["case_id"]:
+                         self.data[key] = "{}".format(date_YmdHMS(2))
+                    elif "case_HP_04" in self.inData["case_id"] or "case_HP_05" in self.inData["case_id"] or "case_TRS_01" in self.inData["case_id"] \
+                            or "case_TRS_01" in self.inData["case_id"]:
+                        pass
+                    elif  "case_TPC_04" in self.inData["case_id"]:
+                        self.data[key] = "{}".format(date_YmdHMS(2))
                     else:
-                        self.data["start_date"] = "{}-01-01".format(GetYear)
+                        self.data[key][0] = "{}-01-01".format(GetYear)
+                        self.data[key][1] = "{}".format(date_YmdHMS(4))
+                elif key == "class_date_end":
+                    self.data[key] = "{}".format(date_YmdHMS(2))
+                elif key == "class_date_begin":
+                    self.data[key] = "{}-01-01 01:01:01".format(GetYear)
+                elif key == "start_date":
+                    if "case_TRS_01"  in self.inData["case_id"]:
+                        pass
+                    else:
+                        self.data[key] = "{}-01-01".format(GetYear)
                 elif key == "end_date":
                     if "case_TRS_01" in self.inData["case_id"]:
-                        print("不替换参数")
+                        pass
                     else:
-                        self.data["end_date"] = "{}".format(date_YmdHMS(4))
-                elif key == "date":
-                    if "case_HP_04" in self.inData["case_id"] or "case_HP_05" in self.inData["case_id"] or "case_TRS_01" in self.inData["case_id"]:
-                        print("不替换参数")
-                    else:
-                        self.data["date"][0] = "{}-01-01".format(GetYear)
-                        self.data["date"][1] = "{}".format(date_YmdHMS(4))
+                        self.data[key] = "{}".format(date_YmdHMS(4))
+                #年份
+                elif key == "plan_year" or key == "training_year" or key == "year":
+                    self.data[key] = GetYear
 
     def case_ALL(self):
         """所有"""
@@ -92,13 +103,20 @@ class all:
                 self.request_file = {'file':('05四川培训记录汇总表导入模板(寿险).xlsx',open(file_path_06,"rb"),"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")}
             if "case_PD_03" in self.inData["case_id"]:
                 data = requests_zzl("PD_02",self.token,self.company,self.GetYear)
-                print(data)
                 new_list=[]
                 for key in range(int(len(data["data"]["list"]))):
-                    print(data["data"]["list"][key]["class_name"])
                     if data["data"]["list"][key]["class_name"] == "审核数据20138":
                         new_list.append(data["data"]["list"][key]["id"])
                 self.data["ids"] = new_list
+            if "case_TRE_04" in self.inData["case_id"]:
+                data = requests_zzl("case_TRE_03",self.token,self.company,self.GetYear)["data"]["list"][0]["id"]
+                self.data["id"] =data
+            if "case_TPC_04" in self.inData["case_id"]:
+                body = requests_zzl("case_TPC_03",self.token,self.company,self.GetYear)["data"]["list"][0]
+                self.data["id"] =body["id"]
+                self.data["company_id"] = self.province_company_id
+                self.data["commpanyArr"][1] = self.province_company_id
+                self.data["member_id"]  =body["member_id"]
             #请求参数是否上传文件
             if "case_PD_01" in self.inData["case_id"]:
                 body = requests.post(url=self.new_url,headers=self.header,data=self.data,files=self.request_file)
@@ -110,7 +128,6 @@ class all:
         finally:
             inData = update_data(self.inData,self.data,self.new_url,self.header,body.json(),json.loads(self.inData["response_expect_result"]),self.conftest)
             return inData,body
-
 
 
     def ParameterlessAdjustment(self,company=None,year=None,member_id=None,Index=None,courseId=None,module=None,name_id_number=None,
@@ -222,7 +239,6 @@ class all:
             json_s =json.loads(data["params"])
             json_s["companyId"] = company
             res = requests.post(url=url+data["url"],json=json_s,headers=self.header).json()
-            print(res)
             del_list = ""
             for x in range(int(len(res["data"]["list"]))):
                 name = res["data"]["list"][x]["name"]
@@ -260,8 +276,3 @@ class all:
         print("\n")
         inData = update_data(self.inData,self.data,self.new_url,self.header,body.json(),json.loads(self.inData["response_expect_result"]),self.conftest)
         return inData,body
-
-
-
-
-
