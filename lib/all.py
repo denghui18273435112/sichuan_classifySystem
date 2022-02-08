@@ -59,6 +59,8 @@ class all:
                 if key == "company_id":
                     if "case_PS_02" in  case_id:
                         self.data["company_id"] = province_company_id
+                    elif "case_PIC_04" in case_id:
+                        pass
                     else:
                         self.data["company_id"] = association_company_id
                 #时间、日期
@@ -130,7 +132,7 @@ class all:
                 self.data["id_number_array"] = body
             if "case_PIC_04" in case_id:
                 body = requests_zzl("case_PIC_01",self.token,self.company,self.GetYear)["data"]["list"][0]
-                self.data["id"]  = int(body["created_user"])
+                self.data["id"]  = int(body["id"])
                 self.data["member_id"]  = body["member_id"]
 
             #请求参数是否上传文件
