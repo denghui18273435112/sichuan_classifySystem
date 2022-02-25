@@ -64,13 +64,13 @@ class all:
                     else:
                         self.data["company_id"] = association_company_id
                 #时间、日期
-                elif key == "created_time" or  key == "date"  or key == "updated_time":
-                    if "case_TPC_04" in  case_id:
-                         self.data[key] = "{}".format(date_YmdHMS(2))
-                    elif "case_HP_04" in case_id or "case_HP_05" in case_id or "case_TRS_01" in case_id or "case_TRS_01" in case_id \
-                            or  "case_PCIT" in case_id or "case_IPM" in  case_id:
+                elif key == "created_time" or  key == "date"  or key == "updated_time" or key=="date_end":
+                    if "case_HP_04" in case_id or "case_HP_05" in case_id or "case_TRS_01" in case_id or "case_TRS_01" in case_id \
+                            or  "case_PCIT" in case_id or "case_IPM" in  case_id or "case_ESE" in  case_id:
                         pass
-                    elif  "case_PIC_04" in case_id:
+                    elif "case_TPC_04" in  case_id:
+                         self.data[key] = "{}".format(date_YmdHMS(2))
+                    elif  "case_PIC_04" in case_id or "case_MFS_01" in case_id or "case_MFS_02" in case_id:
                         self.data[key] = "{}".format(date_YmdHMS(4))
                     else:
                         self.data[key][0] = "{}-01-01".format(GetYear)
@@ -79,16 +79,19 @@ class all:
                     self.data[key] = "{}".format(date_YmdHMS(2))
                 elif key == "class_date_begin":
                     self.data[key] = "{}-01-01 01:01:01".format(GetYear)
-                elif key == "start_date" or  key == "bdate":
+                elif key == "start_date" or  key == "bdate" or key=="date_begin":
                     if "case_TRS_01"  in case_id:
                         pass
                     else:
                         self.data[key] = "{}-01-01".format(GetYear)
                 elif key == "end_date" or  key == "edate" or key == "date_end":
-                    if "case_TRS_01" in case_id:
+                    if "case_TRS_01" in case_id or "case_ESE" in  case_id:
                         pass
                     else:
                         self.data[key] = "{}".format(date_YmdHMS(4))
+                elif key == "dateRange":
+                    self.data[key][0] = "{}-01-01".format(GetYear)
+                    self.data[key][1] = "{}".format(date_YmdHMS(4))
                 #年份
                 elif key == "plan_year" or key == "training_year" or key == "year":
                     self.data[key] = GetYear
@@ -134,6 +137,10 @@ class all:
                 body = requests_zzl("case_PIC_01",self.token,self.company,self.GetYear)["data"]["list"][0]
                 self.data["id"]  = int(body["id"])
                 self.data["member_id"]  = body["member_id"]
+            if "case_MFS_03" in case_id:
+                body = requests_zzl("case_PIC_01",self.token,self.company,self.GetYear)["data"]["list"][0]
+                self.data["id"]  = int(body["id"])
+                self.data["departure_date"] ==date_YmdHMS(4)
 
             #请求参数是否上传文件
             if "case_PD_01" in case_id or "case_PD_04" in case_id or "case_PD_05" in case_id or "case_PIQ_04" in case_id:
