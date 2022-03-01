@@ -55,6 +55,7 @@ def teardown_module():
 @allure.epic("四川分类系统")
 class Test_all(object):
 
+    @pytest.mark.test
     #@pytest.mark.skip
     @pytest.mark.run(order=1001)
     @pytest.mark.parametrize("inData",ExcelData("case_ED"))
@@ -63,6 +64,7 @@ class Test_all(object):
         res =all(association_token,association_company_id,province_token,province_company_id,inData,GetYear).case_ALL()
         caseCheck().case_Check(res[0])
 
+    @pytest.mark.test
     #@pytest.mark.skip
     @pytest.mark.run(order=1002)
     @pytest.mark.parametrize("inData",ExcelData("case_PD_"))
@@ -188,6 +190,78 @@ class Test_all(object):
     @pytest.mark.parametrize("inData",ExcelData("case_ESE"))
     def test_ESE(self,association_token,association_company_id,province_token,province_company_id,inData,GetYear):
         """Entry staff enquiries(入职人员查询)"""
+        res =all(association_token,association_company_id,province_token,province_company_id,inData,GetYear).case_ALL()
+        caseCheck().case_Check(res[0])
+
+    #@pytest.mark.skip
+    @pytest.mark.run(order=1018)
+    @pytest.mark.parametrize("inData",ExcelData("case_ASE"))
+    def test_ASE(self,association_token,association_company_id,province_token,province_company_id,inData,GetYear):
+        """Active Staff Enquiries(在职人员查询)"""
+        res =all(association_token,association_company_id,province_token,province_company_id,inData,GetYear).case_ALL()
+        caseCheck().case_Check(res[0])
+
+    #@pytest.mark.skip
+    @pytest.mark.run(order=1019)
+    @pytest.mark.parametrize("inData",ExcelData("case_FSE"))
+    def test_FSE(self,association_token,association_company_id,province_token,province_company_id,inData,GetYear):
+        """Former Staff Enquiries(离职人员查询)"""
+        res =all(association_token,association_company_id,province_token,province_company_id,inData,GetYear).case_ALL()
+        caseCheck().case_Check(res[0])
+
+    #@pytest.mark.skip
+    @pytest.mark.run(order=1020)
+    @pytest.mark.parametrize("inData",ExcelData("case_FPR"))
+    def test_FPR(self,association_token,association_company_id,province_token,province_company_id,inData,GetYear):
+        """Filing of Practice Record(执业备案报送)"""
+        res =all(association_token,association_company_id,province_token,province_company_id,inData,GetYear).case_ALL()
+        caseCheck().case_Check(res[0])
+
+    #@pytest.mark.skip
+    @pytest.mark.run(order=1021)
+    @pytest.mark.parametrize("inData",ExcelData("case_PRIS"))
+    def test_PRIS(self,association_token,association_company_id,province_token,province_company_id,inData,GetYear):
+        """Practice record information statistics(执业备案报送统计)"""
+        res =all(association_token,association_company_id,province_token,province_company_id,inData,GetYear).case_ALL()
+        caseCheck().case_Check(res[0])
+
+    #@pytest.mark.skip
+    @pytest.mark.run(order=1022)
+    @pytest.mark.parametrize("inData",ExcelData("case_IP"))
+    def test_IP(self,association_token,association_company_id,province_token,province_company_id,inData,GetYear):
+        """Import Permission Management(导入权限管理)"""
+        res =all(association_token,association_company_id,province_token,province_company_id,inData,GetYear).case_ALL()
+        caseCheck().case_Check(res[0])
+
+    #@pytest.mark.skip
+    @pytest.mark.run(order=1023)
+    @pytest.mark.parametrize("inData",ExcelData("case_IP"))
+    def test_IP(self,association_token,association_company_id,province_token,province_company_id,inData,GetYear):
+        """Import Permission Management(导入权限管理)"""
+        res =all(association_token,association_company_id,province_token,province_company_id,inData,GetYear).case_ALL()
+        caseCheck().case_Check(res[0])
+
+    #@pytest.mark.skip
+    @pytest.mark.run(order=1024)
+    @pytest.mark.parametrize("inData",ExcelData("case_AM"))
+    def test_IP(self,association_token,association_company_id,province_token,province_company_id,inData,GetYear):
+        """account management (账号管理)"""
+        res =all(association_token,association_company_id,province_token,province_company_id,inData,GetYear).case_ALL()
+        caseCheck().case_Check(res[0])
+
+    #@pytest.mark.skip
+    @pytest.mark.run(order=1025)
+    @pytest.mark.parametrize("inData",ExcelData("case_H5"))
+    def test_H5(self,association_token,association_company_id,province_token,province_company_id,inData,GetYear):
+        """H5(单独的H5查询页面)"""
+        res =all(association_token,association_company_id,province_token,province_company_id,inData,GetYear).case_ALL()
+        caseCheck().case_Check(res[0])
+
+    #@pytest.mark.skip
+    @pytest.mark.run(order=1026)
+    @pytest.mark.parametrize("inData",ExcelData("case_evaluation"))
+    def test_evaluation(self,association_token,association_company_id,province_token,province_company_id,inData,GetYear):
+        """evaluation(移动端测评)"""
         res =all(association_token,association_company_id,province_token,province_company_id,inData,GetYear).case_ALL()
         caseCheck().case_Check(res[0])
 

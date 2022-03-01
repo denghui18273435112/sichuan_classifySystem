@@ -32,14 +32,12 @@ class all:
                         province_token,province_company_id,     #省公司token、公司id
                         inData,GetYear,                         #表格数据、当前年份
                         conftest=True):
-
         self.proxies = {"https":"http://127.0.0.1:8888"}
         self.new_url= url+inData["url"]
         self.data = json.loads(inData["params"])
         self.conftest=conftest
         self.token = association_token
         self.company=association_company_id
-
         self.association_token =association_token
         self.association_company_id= association_company_id
         self.province_token = province_token
@@ -47,13 +45,33 @@ class all:
         self.inData = inData
         self.GetYear = GetYear
         case_id = self.inData["case_id"]
-        #根据接口不同选择不同的token  省协会 省公司
+        #根据接口不同选择不同的token;支持：省协会、省公司、非空cookie、测评
         if "case_PD_01" in inData["case_id"] or "case_PS_02"in inData["case_id"] or "case_TRE_04"in inData["case_id"]:
             self.header = {"Cookie":"{0}".format(province_token)}
+        elif "case_H5_" in   inData["case_id"]:
+            self.header = {"Cookie":""}
+        elif "case_evaluation_" in   inData["case_id"]:
+            self.header = {"token":"{0}".format(requests_zzl(case_id="evaluation_01")["data"]["token"])}
         else:
             self.header = {"Cookie":"{0}".format(association_token)}
-        #替换字段
-        if "case" in case_id:
+        #####################替换字段######################################
+        if "case_ASE_" in case_id:
+            self.data["company_id"] = association_company_id
+            self.data["date_end"] = date_YmdHMS(4)
+            self.data["statistical_date"] = date_YmdHMS(4)
+            self.data["company"][0] = association_company_id
+        elif "case_FSE_" in case_id:
+            self.data["company_id"] = association_company_id
+            self.data["company"][0] = association_company_id
+        elif "case_FPR_" in case_id:
+            self.data["companyId"] = association_company_id
+        elif "case_PRIS_" in case_id:
+            self.data["companyId"] = association_company_id
+        elif "case_IP_" in case_id:
+            self.data["year"] = date_YmdHMS(5)
+        elif "case_AM_02" in case_id:
+            self.data["companyId"] = association_company_id
+        elif "case" in case_id:
             for key  in self.data:
                 #公司id
                 if key == "company_id":
@@ -66,7 +84,7 @@ class all:
                 #时间、日期
                 elif key == "created_time" or  key == "date"  or key == "updated_time" or key=="date_end":
                     if "case_HP_04" in case_id or "case_HP_05" in case_id or "case_TRS_01" in case_id or "case_TRS_01" in case_id \
-                            or  "case_PCIT" in case_id or "case_IPM" in  case_id or "case_ESE" in  case_id:
+                            or  "case_PCIT" in case_id or "case_IPM" in  case_id or "case_ESE" in  case_id or "case_ASE" in  case_id:
                         pass
                     elif "case_TPC_04" in  case_id:
                          self.data[key] = "{}".format(date_YmdHMS(2))
@@ -80,11 +98,11 @@ class all:
                 elif key == "class_date_begin":
                     self.data[key] = "{}-01-01 01:01:01".format(GetYear)
                 elif key == "start_date" or  key == "bdate" or key=="date_begin":
-                    if "case_TRS_01"  in case_id:
+                    if "case_TRS_01"  in case_id or "case_ASE"  in case_id:
                         pass
                     else:
                         self.data[key] = "{}-01-01".format(GetYear)
-                elif key == "end_date" or  key == "edate" or key == "date_end":
+                elif key == "end_date" or  key == "edate" or key == "date_end" or key == "statistical_date":
                     if "case_TRS_01" in case_id or "case_ESE" in  case_id:
                         pass
                     else:
@@ -141,7 +159,15 @@ class all:
                 body = requests_zzl("case_PIC_01",self.token,self.company,self.GetYear)["data"]["list"][0]
                 self.data["id"]  = int(body["id"])
                 self.data["departure_date"] ==date_YmdHMS(4)
-
+            if "case_AM_12" in case_id or "case_AM_09" in case_id or "case_AM_10" in case_id or "case_AM_11" in case_id:
+                body = requests_zzl("AM_05",self.token,self.company,self.GetYear)
+                self.data["ids"].append(body["data"]["list"][0]["id"])
+            if "case_AM_08" in case_id:
+                body = requests_zzl("AM_05",self.token,self.company,self.GetYear)
+                self.data["id"] = body["data"]["list"][0]["id"]
+            if "case_H5_03" in case_id:
+                body = requests_zzl("case_H5_02",self.token,self.company,self.GetYear)
+                self.data["p"] = "{}=".format(body["data"]["qrcode"].split("=")[1])
             #请求参数是否上传文件
             if "case_PD_01" in case_id or "case_PD_04" in case_id or "case_PD_05" in case_id or "case_PIQ_04" in case_id:
                 body = requests.post(url=self.new_url,headers=self.header,data=self.data,files=self.request_file)
