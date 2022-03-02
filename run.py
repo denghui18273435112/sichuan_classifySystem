@@ -10,4 +10,3 @@ if __name__ == '__main__':
     os.system("allure generate {0} -o {1} --clean".format(result_path, allure_reportt_path))
     os.system("allure serve {}".format(result_path))
 
-

@@ -32,7 +32,7 @@ class all:
                         province_token,province_company_id,     #省公司token、公司id
                         inData,GetYear,                         #表格数据、当前年份
                         conftest=True):
-        self.proxies = {"https":"http://127.0.0.1:8888"}
+        self.proxies = {"http":"http://127.0.0.1:8888"}
         self.new_url= url+inData["url"]
         self.data = json.loads(inData["params"])
         self.conftest=conftest
@@ -45,8 +45,9 @@ class all:
         self.inData = inData
         self.GetYear = GetYear
         case_id = self.inData["case_id"]
-        #根据接口不同选择不同的token;支持：省协会、省公司、非空cookie、测评
-        if "case_PD_01" in inData["case_id"] or "case_PS_02"in inData["case_id"] or "case_TRE_04"in inData["case_id"]:
+        ##############################根据接口不同选择不同的token;支持：省协会、省公司、非空cookie、测评##############################
+        if "case_PD_01" in inData["case_id"] or "case_PS_02"in inData["case_id"] or "case_TRE_04"in inData["case_id"]\
+                or "case_FPR_02"in inData["case_id"] or "case_FPR_03"in inData["case_id"]:
             self.header = {"Cookie":"{0}".format(province_token)}
         elif "case_H5_" in   inData["case_id"]:
             self.header = {"Cookie":""}
@@ -54,7 +55,7 @@ class all:
             self.header = {"token":"{0}".format(requests_zzl(case_id="evaluation_01")["data"]["token"])}
         else:
             self.header = {"Cookie":"{0}".format(association_token)}
-        #####################替换字段######################################
+        ##############################替换字段##############################
         if "case_ASE_" in case_id:
             self.data["company_id"] = association_company_id
             self.data["date_end"] = date_YmdHMS(4)
@@ -71,6 +72,10 @@ class all:
             self.data["year"] = date_YmdHMS(5)
         elif "case_AM_02" in case_id:
             self.data["companyId"] = association_company_id
+        elif "case_ED_06" in case_id:
+            self.data["plan_year"] = GetYear
+        elif "case_PD_01" in case_id:
+            self.data["class_date_end"] = date_YmdHMS(2)
         elif "case" in case_id:
             for key  in self.data:
                 #公司id
@@ -118,7 +123,7 @@ class all:
         """所有"""
         try:
             case_id = self.inData["case_id"]
-            #文件参数
+            ##############################文件参数##############################
             if "case_PD_01" in case_id:
                 self.request_file = {'file':('05四川培训记录汇总表导入模板(寿险).xlsx',open(file_path_06,"rb"),file_type)}
             if "case_PD_04" in case_id:
@@ -127,7 +132,7 @@ class all:
                 self.request_file = {'file':('03四川离职人员导入模板.xlsx',open(file_path_04,"rb"),file_type)}
             if "case_PIQ_04" in case_id:
                 self.request_file = {'file':('01入职前诚信级别批量查询模板.xlsx',open(file_path_02,"rb"),file_type)}
-            #接口依赖
+            ##############################接口依赖##############################
             if "case_PD_03" in case_id:
                 data = requests_zzl("PD_02",self.token,self.company,self.GetYear)
                 new_list=[]
@@ -168,7 +173,7 @@ class all:
             if "case_H5_03" in case_id:
                 body = requests_zzl("case_H5_02",self.token,self.company,self.GetYear)
                 self.data["p"] = "{}=".format(body["data"]["qrcode"].split("=")[1])
-            #请求参数是否上传文件
+            ##############################请求参数是否上传文件##############################
             if "case_PD_01" in case_id or "case_PD_04" in case_id or "case_PD_05" in case_id or "case_PIQ_04" in case_id:
                 body = requests.post(url=self.new_url,headers=self.header,data=self.data,files=self.request_file)
             else:

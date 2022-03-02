@@ -68,7 +68,7 @@ def  requests_zzl(case_id,token_1=None,company_id_1=None,year=None,file=None):
                     data_new[key][0] = "{}-01-01".format(date_YmdHMS(5))
                     data_new[key][1] = "{}".format(date_YmdHMS(4))
     if "evaluation_01" in case_id:
-        header = {"Cookie":"vcode=16937e3230d02164184239ffb309e2913729df8d3e3f5e4bece26e2b57a1c90dt1646146622; zzlvcode=7e75df8c2c48008269a8fcbcc260d51c396c7233g1646150602"}
+        header = {"Cookie":"vcode=denghui; cipcms.token=denghui; zzlvcode=denghui"}
     else:
         header = {"Cookie":"{0}".format(token_1)}
 
