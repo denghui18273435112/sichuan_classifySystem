@@ -7,6 +7,6 @@ if __name__ == '__main__':
                    #"-m", "not(login or no)",
                    # "-m", "test",
                  "--alluredir", result_path])
-    os.system("allure generate {0} -o {1} --clean".format(result_path, allure_reportt_path))
-    os.system("allure serve {}".format(result_path))
+    # os.system("allure generate {0} -o {1} --clean".format(result_path, allure_reportt_path))
+    # os.system("allure serve {}".format(result_path))
 
