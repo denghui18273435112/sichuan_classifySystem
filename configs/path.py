@@ -33,11 +33,11 @@ test_xlsx = data_path+os.sep+"ctest.xlsx"
 #文档路径
 file_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 file_path_01= docs_path+os.sep+"四川分类系统用例.xls"
-file_path_02= file_path+os.sep+"01入职前诚信级别批量查询模板.xlsx"
-file_path_03= file_path+os.sep+"02四川在职人员导入模板.xlsx"
-file_path_04= file_path+os.sep+"03四川离职人员导入模板.xlsx"
-file_path_05= file_path+os.sep+"04培训测评批量查询模板.xlsx"
-file_path_06= file_path+os.sep+"05四川培训记录汇总表导入模板(寿险).xlsx"
+file_path_02= file_path+os.sep+"02-入职批量查询.xlsx"
+file_path_03= file_path+os.sep+"01-四川在职人员导入模板.xlsx"
+file_path_04= file_path+os.sep+"04-四川离职人员导入模板.xlsx"
+file_path_05= file_path+os.sep+"培训测评批量查询模板.xlsx"
+file_path_06= file_path+os.sep+"03-培训记录导入-有在职记录.xlsx"
 
 
 

@@ -47,6 +47,8 @@ def date_YmdHMS(type=1):
         current_time = now_time.strftime("%Y-%m-%d")
     if type == 5:
         current_time = now_time.strftime("%Y")
+    if type == 6:
+        current_time = now_time.strftime("%Y-%m")
     return current_time
 
 

@@ -24,6 +24,13 @@ from tools.ExcelData import ExcelData
 from tools.commonly_method import *
 import traceback
 from tools.Base import *
+
+#分页所需
+pageNum= 1
+pageSize= 5
+count=0
+
+
 class all:
     """
     所有模块
@@ -55,8 +62,26 @@ class all:
             self.header = {"token":"{0}".format(requests_zzl(case_id="evaluation_01")["data"]["token"])}
         else:
             self.header = {"Cookie":"{0}".format(association_token)}
-        ##############################替换字段##############################
-        if "case_ASE_" in case_id:
+        ##############################替换字段-根据id替换##############################
+        if "case_HP_" in case_id:
+            if "case_HP_01" in case_id:
+                self.data["company_id"] = association_company_id
+                self.data["plan_year"] = date_YmdHMS(5)
+            elif "case_HP_02" in case_id:
+                self.data["plan_year"] = date_YmdHMS(5)
+            elif "case_HP_03" in case_id:
+                self.data["company_id"] = association_company_id
+                self.data["plan_year"] = date_YmdHMS(5)
+            elif "case_HP_04" in case_id:
+                self.data["plan_year"] = date_YmdHMS(5)
+            elif "case_HP_05" in case_id:
+                self.data["company_id"] = association_company_id
+                self.data["plan_year"] = date_YmdHMS(5)
+            elif "case_HP_06" in case_id:
+                self.data["plan_year"] = date_YmdHMS(5)
+                self.data["date"] = date_YmdHMS(6)
+
+        elif "case_ASE_" in case_id:
             self.data["company_id"] = association_company_id
             self.data["date_end"] = date_YmdHMS(4)
             self.data["statistical_date"] = date_YmdHMS(4)
@@ -76,6 +101,35 @@ class all:
             self.data["plan_year"] = GetYear
         elif "case_PD_01" in case_id:
             self.data["class_date_end"] = date_YmdHMS(2)
+        elif "case_GTOHNQ_" in case_id:
+            self.data["companyId"] = association_company_id
+            self.data["historyTrainingYear"] = GetYear-1
+            self.data["pageNum"] = pageNum
+            self.data["pageSize"] = pageSize
+            self.data["count"] =count
+        elif "case_AS_" in case_id:
+            self.data["inst_id"] = association_company_id
+            self.data["year"] = GetYear
+            self.data["pageNum"] = pageNum
+            self.data["pageSize"] = pageSize
+            self.data["count"] =count
+            self.data["date_begin"] ="{}-01-01".format(date_YmdHMS(5))
+            self.data["date_end"] =date_YmdHMS(4)
+        elif "case_CR_" in case_id:
+            if "case_CR_01"==case_id:
+                self.data["CompanyId"] = association_company_id
+                self.data["trainingyear"] = GetYear
+            if "case_CR_02"==case_id:
+                self.data["AuditStatus"] = 15
+                self.data["trainingyear"] = GetYear
+            if "case_CR_03"==case_id:
+                pass
+            self.data["pageNum"] = pageNum
+            self.data["pageSize"] = pageSize
+
+
+
+        #比较乱的替换字段
         elif "case" in case_id:
             for key  in self.data:
                 #公司id
@@ -86,10 +140,12 @@ class all:
                         pass
                     else:
                         self.data["company_id"] = association_company_id
+
                 #时间、日期
                 elif key == "created_time" or  key == "date"  or key == "updated_time" or key=="date_end":
                     if "case_HP_04" in case_id or "case_HP_05" in case_id or "case_TRS_01" in case_id or "case_TRS_01" in case_id \
-                            or  "case_PCIT" in case_id or "case_IPM" in  case_id or "case_ESE" in  case_id or "case_ASE" in  case_id:
+                            or  "case_PCIT" in case_id or "case_IPM" in  case_id or "case_ESE" in  case_id or "case_ASE" in  case_id\
+                            or "case_TRE" in case_id:
                         pass
                     elif "case_TPC_04" in  case_id:
                          self.data[key] = "{}".format(date_YmdHMS(2))
@@ -119,19 +175,23 @@ class all:
                 elif key == "plan_year" or key == "training_year" or key == "year":
                     self.data[key] = GetYear
 
+
+
+
+
     def case_ALL(self):
         """所有"""
         try:
             case_id = self.inData["case_id"]
             ##############################文件参数##############################
             if "case_PD_01" in case_id:
-                self.request_file = {'file':('05四川培训记录汇总表导入模板(寿险).xlsx',open(file_path_06,"rb"),file_type)}
+                self.request_file = {'file':('03-培训记录导入-有在职记录.xlsx',open(file_path_06,"rb"),file_type)}
             if "case_PD_04" in case_id:
-                self.request_file = {'file':('02四川在职人员导入模板.xlsx',open(file_path_03,"rb"),file_type)}
+                self.request_file = {'file':('01-四川在职人员导入模板.xlsx',open(file_path_03,"rb"),file_type)}
             if "case_PD_05" in case_id:
-                self.request_file = {'file':('03四川离职人员导入模板.xlsx',open(file_path_04,"rb"),file_type)}
+                self.request_file = {'file':('04-四川离职人员导入模板.xlsx',open(file_path_04,"rb"),file_type)}
             if "case_PIQ_04" in case_id:
-                self.request_file = {'file':('01入职前诚信级别批量查询模板.xlsx',open(file_path_02,"rb"),file_type)}
+                self.request_file = {'file':('02-入职批量查询.xlsx',open(file_path_02,"rb"),file_type)}
             ##############################接口依赖##############################
             if "case_PD_03" in case_id:
                 data = requests_zzl("PD_02",self.token,self.company,self.GetYear)
@@ -140,9 +200,9 @@ class all:
                     if data["data"]["list"][key]["class_name"] == "审核数据20138":
                         new_list.append(data["data"]["list"][key]["id"])
                 self.data["ids"] = new_list
-            if "case_TRE_04" in case_id:
-                data = requests_zzl("case_TRE_03",self.token,self.company,self.GetYear)["data"]["list"][0]["id"]
-                self.data["id"] =data
+            # if "case_TRE_04" in case_id:
+            #     data = requests_zzl("case_TRE_03",self.token,self.company,self.GetYear)["data"]["list"][0]["id"]
+            #     self.data["id"] =data
             if "case_TPC_04" in case_id:
                 body = requests_zzl("case_TPC_03",self.token,self.company,self.GetYear)["data"]["list"][0]
                 self.data["id"] =body["id"]
@@ -153,7 +213,7 @@ class all:
                 body = requests_zzl("case_PIQ_01",self.token,self.company,self.GetYear)["data"]["list"][0]
                 self.data["id"]  =body["member_id"]
             if "case_PIQ_05" in case_id:
-                file = {'file':('01入职前诚信级别批量查询模板.xlsx',open(file_path_02,"rb"),file_type)}
+                file = {'file':('02-入职批量查询.xlsx',open(file_path_02,"rb"),file_type)}
                 body = requests_zzl("case_PIQ_04",self.token,self.company,self.GetYear,file=file)["data"]
                 self.data["id_number_array"] = body
             if "case_PIC_04" in case_id:
@@ -178,6 +238,8 @@ class all:
                 body = requests.post(url=self.new_url,headers=self.header,data=self.data,files=self.request_file)
             else:
                 body = requests.post(url=self.new_url,headers=self.header,json=self.data)
+            if "case_evaluation_03" in case_id:
+                detail_id= body["data"][0]["id"]
         except BaseException:
             traceback.print_exc()
             self.data["actual_result"] = traceback.format_exc()

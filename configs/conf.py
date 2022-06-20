@@ -6,3 +6,4 @@ cookie_name = "cipcms.token"
 #验证码在cookies中的名称
 vcode_name= "vcode"
 
+proxies = {"http":"http://127.0.0.1:8888"}

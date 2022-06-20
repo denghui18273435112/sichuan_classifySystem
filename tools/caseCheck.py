@@ -16,17 +16,22 @@ class caseCheck:
                     #列表长度比较
                     if  isinstance(values,list):
                         if len(values) < response_expect_result[key]:
-                            assert  True==False,"对比类型列表;系统呈现:{0}>=表格获取:{1};".format(len(values),response_expect_result[key])
+                            assert  True==False,"对比类型列表;系统呈现:{0}>=表格获取:{1};接口校验失败".format(len(values),response_expect_result[key])
                         allure.attach(body="对比类型列表;系统呈现:{0}>=表格获取:{1};".format(len(values),response_expect_result[key]), name="数据对比情况", attachment_type=allure.attachment_type.TEXT)
+                    #浮点大小比较
+                    elif isinstance(values, float):
+                        if values < response_expect_result[key]:
+                            assert  True==False,"对比类型浮点;系统呈现:{0}>=表格获取:{1};接口校验失败".format(values,response_expect_result[key])
+                        allure.attach(body="对比类型数字;系统呈现:{0}>=表格获取:{1};".format(values,response_expect_result[key]), name="数据对比情况", attachment_type=allure.attachment_type.TEXT)
                     #数字大小比较
                     elif isinstance(values, int):
                         if values < response_expect_result[key]:
-                            assert  True==False,"对比类型数字;系统呈现:{0}>=表格获取:{1};".format(values,response_expect_result[key])
+                            assert  True==False,"对比类型数字;系统呈现:{0}>=表格获取:{1};接口校验失败".format(values,response_expect_result[key])
                         allure.attach(body="对比类型数字;系统呈现:{0}>=表格获取:{1};".format(values,response_expect_result[key]), name="数据对比情况", attachment_type=allure.attachment_type.TEXT)
                     #字符串相同比较
                     else:
                         if values != response_expect_result[key]:
-                            assert  True==False,"对比类型字符串;系统呈现:{0}==表格获取:{1};".format(values,response_expect_result[key])
+                            assert  True==False,"对比类型字符串;系统呈现:{0}!=表格获取:{1};接口校验失败".format(values,response_expect_result[key])
                         allure.attach(body="对比类型字符串;系统呈现:{0}==表格获取:{1};".format(values,response_expect_result[key]), name="数据对比情况", attachment_type=allure.attachment_type.TEXT)
         except Exception as ERROR_NEW:
             traceback.print_exc()
