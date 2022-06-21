@@ -25,6 +25,7 @@ def ExcelData(beginColumn=None,file_name="四川分类系统用例.xls"):
     """
     # excel_file=data_path+os.sep+file_name
     _data=[]
+    #print(file_path_01)
     workbook = xlrd.open_workbook(file_path_01,formatting_info=True)
     sheets = workbook.sheet_names()
     for i in range(workbook.nsheets):

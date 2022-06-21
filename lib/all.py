@@ -175,11 +175,13 @@ class all:
                 elif key == "plan_year" or key == "training_year" or key == "year":
                     self.data[key] = GetYear
 
-    def case_ALL(self):
+    def case_ALL(self, data_storage=None):
         """所有"""
         try:
             case_id = self.inData["case_id"]
-            ##############################文件参数##############################
+            """
+            需要传入表格用来
+            """
             if "case_PD_01" in case_id:
                 self.request_file = {'file':('03-培训记录导入-有在职记录.xlsx',open(file_path_06,"rb"),file_type)}
             if "case_PD_04" in case_id:
@@ -188,54 +190,88 @@ class all:
                 self.request_file = {'file':('04-四川离职人员导入模板.xlsx',open(file_path_04,"rb"),file_type)}
             if "case_PIQ_04" in case_id:
                 self.request_file = {'file':('02-入职批量查询.xlsx',open(file_path_02,"rb"),file_type)}
-            ##############################接口依赖##############################
-            if "case_PD_03" in case_id:
-                data = requests_zzl("PD_02",self.token,self.company,self.GetYear)
-                new_list=[]
-                for key in range(int(len(data["data"]["list"]))):
-                    if data["data"]["list"][key]["class_name"] == "审核数据20138":
-                        new_list.append(data["data"]["list"][key]["id"])
-                self.data["ids"] = new_list
-            # if "case_TRE_04" in case_id:
-            #     data = requests_zzl("case_TRE_03",self.token,self.company,self.GetYear)["data"]["list"][0]["id"]
-            #     self.data["id"] =data
-            if "case_TPC_04" in case_id:
-                body = requests_zzl("case_TPC_03",self.token,self.company,self.GetYear)["data"]["list"][0]
-                self.data["id"] =body["id"]
-                self.data["company_id"] = self.province_company_id
-                self.data["commpanyArr"][1] = self.province_company_id
-                self.data["member_id"]  =body["member_id"]
-            if "case_PIQ_06" in case_id:
-                body = requests_zzl("case_PIQ_01",self.token,self.company,self.GetYear)["data"]["list"][0]
-                self.data["id"]  =body["member_id"]
-            if "case_PIQ_05" in case_id:
-                file = {'file':('02-入职批量查询.xlsx',open(file_path_02,"rb"),file_type)}
-                body = requests_zzl("case_PIQ_04",self.token,self.company,self.GetYear,file=file)["data"]
-                self.data["id_number_array"] = body
-            if "case_PIC_04" in case_id:
-                body = requests_zzl("case_PIC_01",self.token,self.company,self.GetYear)["data"]["list"][0]
-                self.data["id"]  = int(body["id"])
-                self.data["member_id"]  = body["member_id"]
-            if "case_MFS_03" in case_id:
-                body = requests_zzl("case_PIC_01",self.token,self.company,self.GetYear)["data"]["list"][0]
-                self.data["id"]  = int(body["id"])
+            """
+            接口依赖
+            """
+            if "case_TPC_03" in case_id:
+                TPC = data_storage["case_TPC_02"]["data"]
+                self.data["auth_type"] =TPC["auth_type"]
+                self.data["kw_id_number"] =TPC["id_number"]
+                self.data["kw_name"] =TPC["name"]
+            elif "case_PIQ_06" in case_id:
+                PIQ = data_storage["case_PIQ_01"]["data"]
+                self.data["id"]  =PIQ["member_id"]
+            elif "case_TRE_04" in case_id:
+                TRE = data_storage["case_TRE_02"]["data"]
+                self.data["id"] =TRE["id"]
+            elif "case_PIQ_05" in case_id:
+                PIQ = data_storage["case_PIQ_04"]["data"]
+                self.data["id_number_array"] =PIQ
+            elif "case_PIC_04" in case_id:
+                PIC = data_storage["case_PIC_01"]["data"]
+                self.data["id"]  = int(PIC["id"])
+                self.data["member_id"]  = PIC["member_id"]
+            elif "case_MFS_03" in case_id:
+                MFS = data_storage["case_PIC_01"]["data"]
+                self.data["id"]  = int(MFS["id"])
                 self.data["departure_date"] ==date_YmdHMS(4)
-            if "case_AM_12" in case_id or "case_AM_09" in case_id or "case_AM_10" in case_id or "case_AM_11" in case_id:
-                body = requests_zzl("AM_05",self.token,self.company,self.GetYear)
-                self.data["ids"].append(body["data"]["list"][0]["id"])
-            if "case_AM_08" in case_id:
-                body = requests_zzl("AM_05",self.token,self.company,self.GetYear)
-                self.data["id"] = body["data"]["list"][0]["id"]
-            if "case_H5_03" in case_id:
-                body = requests_zzl("case_H5_02",self.token,self.company,self.GetYear)
-                self.data["p"] = "{}=".format(body["data"]["qrcode"].split("=")[1])
-            ##############################请求参数是否上传文件##############################
+            elif "case_AM_12" in case_id or "case_AM_09" in case_id or "case_AM_10" in case_id \
+                    or "case_AM_11" in case_id:
+                AM = data_storage["case_AM_05"]["data"]
+                self.data["ids"].append(int(AM["id"]))
+            elif "case_AM_08" in case_id:
+                AM = data_storage["case_AM_05"]["data"]
+                self.data["id"]=int(AM["id"])
+            elif "case_H5_03" in case_id:
+                H5 = data_storage["case_H5_02"]["data"]
+                self.data["p"] = "{}=".format(H5["data"]["qrcode"].split("=")[1])
+            elif "case_HP_09" in case_id:
+                HP = data_storage["case_HP_07"]["data"]
+                self.data["member_id"] = HP["member_id"]
+            elif "case_PD_03" in case_id:
+                HP = data_storage["case_PD_02"]["data"]
+                new_list=[]
+                for key in range(int(len(HP["data"]["list"]))):
+                    if HP["data"]["list"][key]["class_name"] == "审核数据20138":
+                        new_list.append(HP["data"]["list"][key]["id"])
+                self.data["ids"] = new_list
+            """
+            请求接口;是否上传文件
+            """
             if "case_PD_01" in case_id or "case_PD_04" in case_id or "case_PD_05" in case_id or "case_PIQ_04" in case_id:
                 body = requests.post(url=self.new_url,headers=self.header,data=self.data,files=self.request_file)
             else:
                 body = requests.post(url=self.new_url,headers=self.header,json=self.data)
-            if "case_evaluation_03" in case_id:
-                detail_id= body["data"][0]["id"]
+            """
+            获取需要的数据,用于接口依赖部分
+            """
+            if "case_HP_07" in case_id:
+                data_storage["case_HP_07"] = {}
+                data_storage["case_HP_07"]["data"] = body.json()["data"]["list"][0]
+            elif "case_TPC_02" in case_id:
+                data_storage["case_TPC_02"] = {}
+                data_storage["case_TPC_02"]["data"] =body.json()["data"]["list"][0]
+            elif "case_PIQ_01" in case_id:
+                data_storage["case_PIQ_01"] = {}
+                data_storage["case_PIQ_01"]["data"] =body.json()["data"]["list"][0]
+            elif "case_TRE_02" in case_id:
+                data_storage["case_TRE_02"]={}
+                data_storage["case_TRE_02"]["data"] =body.json()["data"]["list"][0]
+            elif "case_PIQ_04" in case_id:
+                data_storage["case_PIQ_04"]={}
+                data_storage["case_PIQ_04"]["data"] =body.json()["data"]
+            elif "case_PIC_01" in case_id:
+                data_storage["case_PIC_01"]={}
+                data_storage["case_PIC_01"]["data"] =body.json()["data"]["list"][0]
+            elif "case_AM_05" in case_id:
+                data_storage["case_AM_05"]={}
+                data_storage["case_AM_05"]["data"] =body.json()["data"]["list"][0]
+            elif "case_H5_02" in case_id:
+                data_storage["case_H5_02"]={}
+                data_storage["case_H5_02"]["data"] =body.json()
+            elif "case_PD_02" in case_id:
+                data_storage["case_PD_02"]={}
+                data_storage["case_PD_02"]["data"] =body.json()
         except BaseException:
             traceback.print_exc()
             self.data["actual_result"] = traceback.format_exc()
