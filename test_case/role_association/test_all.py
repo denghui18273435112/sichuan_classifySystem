@@ -71,6 +71,8 @@ def teardown_module():
         body3.json()
         allure.attach(body=json.dumps(body3.json()), name="删除档案数据", attachment_type=allure.attachment_type.TEXT)
 
+
+
 @allure.epic("四川分类系统")
 class Test_all(object):
 
@@ -88,7 +90,7 @@ class Test_all(object):
         res =all(association_token,association_company_id,province_token,province_company_id,inData,GetYear).case_ALL()
         caseCheck().case_Check(res[0])
 
-    ##@pytest.mark.skip
+    #@pytest.mark.skip
     @pytest.mark.run(order=1003)
     @pytest.mark.parametrize("inData",ExcelData("case_HP"))
     def test_HP(self,association_token,association_company_id,province_token,province_company_id,inData,GetYear):
@@ -96,7 +98,7 @@ class Test_all(object):
         res =all(association_token,association_company_id,province_token,province_company_id,inData,GetYear).case_ALL()
         caseCheck().case_Check(res[0])
 
-    ##@pytest.mark.skip
+    #@pytest.mark.skip
     @pytest.mark.run(order=1004)
     @pytest.mark.parametrize("inData",ExcelData("case_PS"))
     def test_PS(self,association_token,association_company_id,province_token,province_company_id,inData,GetYear):
@@ -104,7 +106,7 @@ class Test_all(object):
         res =all(association_token,association_company_id,province_token,province_company_id,inData,GetYear).case_ALL()
         caseCheck().case_Check(res[0])
 
-    # ##@pytest.mark.skip
+    # #@pytest.mark.skip
     # @pytest.mark.run(order=1005)
     # @pytest.mark.parametrize("inData",ExcelData("case_TRI"))
     # def test_TRI(self,association_token,association_company_id,province_token,province_company_id,inData,GetYear):
@@ -112,7 +114,7 @@ class Test_all(object):
     #     res =all(association_token,association_company_id,province_token,province_company_id,inData,GetYear).case_ALL()
     #     caseCheck().case_Check(res[0])
 
-    ##@pytest.mark.skip
+    #@pytest.mark.skip
     @pytest.mark.run(order=1006)
     @pytest.mark.parametrize("inData",ExcelData("case_TRE"))
     def test_TRE(self,association_token,association_company_id,province_token,province_company_id,inData,GetYear):
@@ -120,7 +122,7 @@ class Test_all(object):
         res =all(association_token,association_company_id,province_token,province_company_id,inData,GetYear).case_ALL()
         caseCheck().case_Check(res[0])
 
-    ##@pytest.mark.skip
+    #@pytest.mark.skip
     @pytest.mark.run(order=1007)
     @pytest.mark.parametrize("inData",ExcelData("case_TCI"))
     def test_TCI(self,association_token,association_company_id,province_token,province_company_id,inData,GetYear):
@@ -128,7 +130,7 @@ class Test_all(object):
         res =all(association_token,association_company_id,province_token,province_company_id,inData,GetYear).case_ALL()
         caseCheck().case_Check(res[0])
 
-    ##@pytest.mark.skip
+    #@pytest.mark.skip
     @pytest.mark.run(order=1008)
     @pytest.mark.parametrize("inData",ExcelData("case_TRS"))
     def test_TRS(self,association_token,association_company_id,province_token,province_company_id,inData,GetYear):
@@ -136,7 +138,7 @@ class Test_all(object):
         res =all(association_token,association_company_id,province_token,province_company_id,inData,GetYear).case_ALL()
         caseCheck().case_Check(res[0])
 
-    ##@pytest.mark.skip
+    #@pytest.mark.skip
     @pytest.mark.run(order=1009)
     @pytest.mark.parametrize("inData",ExcelData("case_Trecords"))
     def test_Trecords(self,association_token,association_company_id,province_token,province_company_id,inData,GetYear):

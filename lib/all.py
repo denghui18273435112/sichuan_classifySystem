@@ -175,10 +175,6 @@ class all:
                 elif key == "plan_year" or key == "training_year" or key == "year":
                     self.data[key] = GetYear
 
-
-
-
-
     def case_ALL(self):
         """所有"""
         try:
@@ -245,10 +241,10 @@ class all:
             self.data["actual_result"] = traceback.format_exc()
         finally:
             print(self.inData["case_id"]+"-"+self.inData["case_name"])
-            print(self.new_url)
-            print(self.header)
-            print(self.data)
-            print(body.json())
-            print("\n")
+            # print(self.new_url)
+            # print(self.header)
+            # print(self.data)
+            # print(body.json())
+            #print("\n")
             inData = update_data(self.inData,self.data,self.new_url,self.header,body.json(),json.loads(self.inData["response_expect_result"]),self.conftest)
             return inData,body
