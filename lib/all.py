@@ -276,7 +276,7 @@ class all:
             traceback.print_exc()
             self.data["actual_result"] = traceback.format_exc()
         finally:
-            print(self.inData["case_id"]+"-"+self.inData["case_name"])
+            print(self.inData["case_id"])
             # print(self.new_url)
             # print(self.header)
             # print(self.data)
